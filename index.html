@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Gardners</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f12;
+    --surface: #15181d;
+    --surface-2: #1a1e24;
+    --border: rgba(255, 255, 255, 0.07);
+    --border-strong: rgba(255, 255, 255, 0.16);
+    --text: #e8eaed;
+    --muted: #9aa3ad;
+    --faint: #6b7480;
+    --accent: #8ab4d8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Instrument Sans', sans-serif;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .mono {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  /* ---------- Nav ---------- */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28px;
+    height: 60px;
+    background: rgba(13, 15, 18, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .wordmark {
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.02em;
+    color: var(--text);
+    text-decoration: none;
+  }
+  .wordmark span { color: var(--faint); font-weight: 500; }
+
+  .nav-links {
+    display: flex;
+    gap: 6px;
+    list-style: none;
+  }
+  .nav-links a {
+    display: block;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.15s ease, background 0.15s ease;
+  }
+  .nav-links a:hover, .nav-links a:focus-visible {
+    color: var(--text);
+    background: var(--surface-2);
+  }
+  .nav-links a:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  /* Future pages: add links to .nav-links in the markup below */
+
+  /* ---------- Layout (mobile-first) ---------- */
+  .wrap {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 28px 96px;
+  }
+
+  /* ---------- Header ---------- */
+  header {
+    padding: 88px 0 64px;
+    border-bottom: 1px solid var(--border);
+  }
+  header .mono { color: var(--accent); }
+  h1 {
+    font-size: clamp(2.4rem, 6vw, 4.2rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    margin-top: 14px;
+  }
+  .subline {
+    margin-top: 14px;
+    font-size: 1.1rem;
+    color: var(--muted);
+    max-width: 46ch;
+  }
+
+  /* ---------- Sections ---------- */
+  section { padding-top: 56px; }
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+  h2 {
+    font-size: 1.35rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .section-head .mono { color: var(--faint); }
+
+  /* ---------- Cards ---------- */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 16px;
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 22px 20px 20px;
+    text-decoration: none;
+    color: var(--text);
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  .card:hover, .card:focus-visible {
+    background: var(--surface-2);
+    border-color: var(--border-strong);
+  }
+  .card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .status { display: flex; align-items: center; gap: 8px; }
+  .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--accent);
+  }
+  .dot.pending { background: var(--faint); }
+  .status .mono { color: var(--muted); }
+
+  .card h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .card p {
+    font-size: 0.92rem;
+    color: var(--muted);
+    line-height: 1.45;
+  }
+
+  .card.pending { opacity: 0.75; }
+
+  .resources .card { padding: 18px 20px; gap: 4px; }
+  .resources h3 { font-size: 1.02rem; }
+
+  footer {
+    margin-top: 88px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    color: var(--faint);
+    font-size: 0.85rem;
+  }
+
+  /* ---------- Desktop ---------- */
+  @media (min-width: 900px) {
+    nav { padding: 0 44px; height: 64px; }
+
+    .wrap { padding: 0 44px 120px; }
+
+    header {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: end;
+      gap: 40px;
+      padding: 120px 0 72px;
+    }
+    .subline {
+      margin-top: 0;
+      text-align: right;
+      font-size: 1.05rem;
+      max-width: 34ch;
+      justify-self: end;
+    }
+
+    section { padding-top: 72px; }
+
+    .apps .grid {
+      grid-template-columns: repeat(4, 1fr);
+      grid-auto-rows: 172px;
+      gap: 18px;
+      max-height: calc(172px * 2 + 18px); /* 2-row cap; 9+ items scroll */
+      overflow-y: auto;
+    }
+    .apps .card { padding: 26px 24px 24px; }
+    .apps .card h3 { margin-top: auto; }
+
+    .resources .grid {
+      grid-template-columns: repeat(4, 1fr);
+      grid-auto-rows: 96px;
+      max-height: calc(96px * 2 + 16px); /* 2-row cap; 9+ items scroll */
+      overflow-y: auto;
+    }
+
+    /* subtle scrollbar for capped grids */
+    .grid::-webkit-scrollbar { width: 8px; }
+    .grid::-webkit-scrollbar-thumb {
+      background: var(--border-strong);
+      border-radius: 4px;
+    }
+    .grid { scrollbar-width: thin; scrollbar-color: var(--border-strong) transparent; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .card, .nav-links a { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="wordmark" href="#">The Gardners<span>.xyz</span></a>
+  <ul class="nav-links">
+    <li><a href="#apps">Apps</a></li>
+    <li><a href="#resources">Resources</a></li>
+    <!-- Future pages go here, e.g. <li><a href="/plan/">3-Year Plan</a></li> -->
+  </ul>
+</nav>
+
+<div class="wrap">
+
+  <header>
+    <div>
+      <span class="mono">Family hub</span>
+      <h1>The Gardners</h1>
+    </div>
+    <p class="subline">Everything we run, in one place. Apps, tools, and shared resources for the household.</p>
+  </header>
+
+  <section id="apps" class="apps">
+    <div class="section-head">
+      <h2>Apps</h2>
+      <span class="mono">04</span>
+    </div>
+    <div class="grid">
+
+      <!-- Swap hrefs for subdomains once DNS is wired -->
+      <a class="card" href="https://tannmann101.github.io/budget-ledger/">
+        <span class="status"><span class="dot"></span><span class="mono">Live</span></span>
+        <h3>Finance Tracker</h3>
+        <p>Budget, bills, and accounts. Synced between us.</p>
+      </a>
+
+      <a class="card" href="https://tannmann101.github.io/roc-workspace/">
+        <span class="status"><span class="dot"></span><span class="mono">Live</span></span>
+        <h3>Rochelle&rsquo;s Workshop</h3>
+        <p>Projects, ideas, and what&rsquo;s up next.</p>
+      </a>
+
+      <a class="card pending" href="#">
+        <span class="status"><span class="dot pending"></span><span class="mono">In build</span></span>
+        <h3>Secretary</h3>
+        <p>Household operations &mdash; plans, schedules, and upkeep.</p>
+      </a>
+
+      <a class="card pending" href="#">
+        <span class="status"><span class="dot pending"></span><span class="mono">In build</span></span>
+        <h3>Teacher</h3>
+        <p>Learning and teaching at home.</p>
+      </a>
+
+    </div>
+  </section>
+
+  <section id="resources" class="resources">
+    <div class="section-head">
+      <h2>Resources</h2>
+      <span class="mono">04</span>
+    </div>
+    <div class="grid">
+      <!-- Point these at Drive folders, PDFs, or wherever documents live -->
+      <a class="card" href="#">
+        <h3>Lease &amp; apartment</h3>
+        <p>Drive folder</p>
+      </a>
+      <a class="card" href="#">
+        <h3>Insurance</h3>
+        <p>Drive folder</p>
+      </a>
+      <a class="card" href="#">
+        <h3>Budget exports</h3>
+        <p>Backups from Finance Tracker</p>
+      </a>
+      <a class="card" href="#">
+        <h3>Shared drive</h3>
+        <p>Everything else</p>
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <span>The Gardners</span>
+    <span>thegardners.xyz</span>
+  </footer>
+
+</div>
+</body>
+</html>
