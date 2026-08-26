@@ -300,27 +300,10 @@
   <section id="resources" class="resources">
     <div class="section-head">
       <h2>Resources</h2>
-      <span class="mono">04</span>
+      <span class="mono">12</span>
     </div>
-    <div class="grid">
-      <!-- Point these at Drive folders, PDFs, or wherever documents live -->
-      <a class="card" href="#">
-        <h3>Lease &amp; apartment</h3>
-        <p>Drive folder</p>
-      </a>
-      <a class="card" href="#">
-        <h3>Insurance</h3>
-        <p>Drive folder</p>
-      </a>
-      <a class="card" href="#">
-        <h3>Budget exports</h3>
-        <p>Backups from Finance Tracker</p>
-      </a>
-      <a class="card" href="#">
-        <h3>Shared drive</h3>
-        <p>Everything else</p>
-      </a>
-    </div>
+    <!-- Cards below are rendered from resources.js — edit that file, not this markup -->
+    <div class="grid"></div>
   </section>
 
   <footer>
@@ -329,5 +312,38 @@
   </footer>
 
 </div>
+
+<script src="resources.js"></script>
+<script>
+  (function () {
+    var grid = document.querySelector('#resources .grid');
+    var count = document.querySelector('#resources .section-head .mono');
+    if (!grid || typeof RESOURCES === 'undefined') return;
+
+    grid.innerHTML = '';
+    RESOURCES.forEach(function (item) {
+      var card = document.createElement('a');
+      card.className = 'card';
+      card.href = item.url;
+      card.target = '_blank';
+      card.rel = 'noopener noreferrer';
+      card.setAttribute('aria-label', item.label + (item.description ? ' — ' + item.description : ''));
+
+      var h3 = document.createElement('h3');
+      h3.textContent = item.label;
+      card.appendChild(h3);
+
+      if (item.description) {
+        var p = document.createElement('p');
+        p.textContent = item.description;
+        card.appendChild(p);
+      }
+
+      grid.appendChild(card);
+    });
+
+    if (count) count.textContent = String(RESOURCES.length).padStart(2, '0');
+  })();
+</script>
 </body>
 </html>
