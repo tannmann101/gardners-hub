@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Convert Anything — The Gardners</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="/styles.css" rel="stylesheet">
+<style>
+  .cat-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+  .cat-tab {
+    background: transparent; border: 1px solid var(--border); border-radius: 7px; padding: 8px 12px;
+    color: var(--muted); font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.06em;
+    text-transform: uppercase; cursor: pointer;
+  }
+  .cat-tab.active { background: var(--surface-2); border-color: var(--border-strong); color: var(--text); }
+  .cat-tab:hover { border-color: var(--border-strong); }
+  .cat-tab:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+  .conv-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+  .conv-row input[type="number"] {
+    width: 100px; font-family: 'IBM Plex Mono', monospace; font-size: 1rem;
+  }
+  select {
+    flex: 1; background: var(--surface-2); border: 1px solid var(--border); border-radius: 7px;
+    padding: 10px 10px; color: var(--text); font-family: 'Instrument Sans', sans-serif; font-size: 0.9rem;
+    cursor: pointer;
+  }
+  select:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+  .swap-btn {
+    background: var(--surface-2); border: 1px solid var(--border); border-radius: 7px; width: 36px; height: 36px;
+    color: var(--muted); cursor: pointer; flex-shrink: 0; font-size: 1rem; display: flex; align-items: center; justify-content: center;
+  }
+  .swap-btn:hover { background: #21262e; border-color: var(--border-strong); color: var(--text); }
+  .swap-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+  .result-row { display: flex; align-items: baseline; gap: 10px; padding-top: 16px; margin-top: 4px; border-top: 1px solid var(--border); }
+  .result-value { font-family: 'IBM Plex Mono', monospace; font-size: 1.7rem; color: var(--accent); }
+  .result-unit { color: var(--muted); font-size: 0.95rem; }
+
+  .ingredient-select { margin-bottom: 14px; }
+  .note { color: var(--faint); font-size: 0.8rem; margin-top: 14px; line-height: 1.5; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <a class="back-link mono" href="/#tools">&larr; Back to The Gardners</a>
+  <div class="eyebrow mono">The Gardners &middot; Household</div>
+  <h1>Convert Anything</h1>
+
+  <div class="cat-tabs" id="cat-tabs">
+    <button type="button" class="cat-tab active" data-cat="volume">Volume</button>
+    <button type="button" class="cat-tab" data-cat="weight">Weight</button>
+    <button type="button" class="cat-tab" data-cat="length">Length</button>
+    <button type="button" class="cat-tab" data-cat="temp">Temp</button>
+    <button type="button" class="cat-tab" data-cat="ingredient">Ingredients</button>
+  </div>
+
+  <div class="card">
+    <div id="ingredient-picker" class="ingredient-select" hidden>
+      <select id="ingredient-select" aria-label="Ingredient"></select>
+    </div>
+
+    <div class="conv-row">
+      <input type="number" id="from-value" value="1" aria-label="Value">
+      <select id="from-unit" aria-label="From unit"></select>
+      <button type="button" class="swap-btn" id="swap-btn" aria-label="Swap units">&#8646;</button>
+      <select id="to-unit" aria-label="To unit"></select>
+    </div>
+
+    <div class="result-row">
+      <span class="result-value" id="result-value">&mdash;</span>
+      <span class="result-unit" id="result-unit-label"></span>
+    </div>
+
+    <p class="note" id="note" hidden></p>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var CATEGORIES = {
+    volume: {
+      units: { mL: 1, L: 1000, tsp: 4.92892159375, tbsp: 14.78676478125, 'fl oz': 29.5735295625, cup: 236.5882365, pint: 473.176473, quart: 946.352946, gallon: 3785.411784 },
+      order: ['tsp', 'tbsp', 'fl oz', 'cup', 'mL', 'L', 'pint', 'quart', 'gallon'],
+      defaults: ['cup', 'mL']
+    },
+    weight: {
+      units: { mg: 0.001, g: 1, kg: 1000, oz: 28.349523125, lb: 453.59237 },
+      order: ['g', 'kg', 'oz', 'lb', 'mg'],
+      defaults: ['oz', 'g']
+    },
+    length: {
+      units: { mm: 0.001, cm: 0.01, m: 1, km: 1000, in: 0.0254, ft: 0.3048, yd: 0.9144, mi: 1609.344 },
+      order: ['in', 'ft', 'cm', 'm', 'yd', 'mi', 'mm', 'km'],
+      defaults: ['in', 'cm']
+    }
+  };
+
+  var INGREDIENTS = [
+    { id: 'flour', label: 'All-purpose flour', gramsPerCup: 120 },
+    { id: 'sugar', label: 'Granulated sugar', gramsPerCup: 200 },
+    { id: 'brown-sugar', label: 'Brown sugar (packed)', gramsPerCup: 220 },
+    { id: 'powdered-sugar', label: 'Powdered sugar', gramsPerCup: 120 },
+    { id: 'butter', label: 'Butter', gramsPerCup: 227 },
+    { id: 'cocoa', label: 'Cocoa powder', gramsPerCup: 85 },
+    { id: 'oats', label: 'Rolled oats', gramsPerCup: 90 },
+    { id: 'rice', label: 'Uncooked rice', gramsPerCup: 185 },
+    { id: 'honey', label: 'Honey', gramsPerCup: 340 },
+    { id: 'milk', label: 'Milk', gramsPerCup: 240 }
+  ];
+  var INGREDIENT_UNITS = ['cup', 'tbsp', 'tsp', 'g', 'oz'];
+  var GRAMS_PER_OZ = 28.349523125;
+
+  var catTabs = document.getElementById('cat-tabs');
+  var ingredientPicker = document.getElementById('ingredient-picker');
+  var ingredientSelect = document.getElementById('ingredient-select');
+  var fromValue = document.getElementById('from-value');
+  var fromUnit = document.getElementById('from-unit');
+  var toUnit = document.getElementById('to-unit');
+  var swapBtn = document.getElementById('swap-btn');
+  var resultValue = document.getElementById('result-value');
+  var resultUnitLabel = document.getElementById('result-unit-label');
+  var noteEl = document.getElementById('note');
+
+  var currentCat = 'volume';
+
+  ingredientSelect.innerHTML = INGREDIENTS.map(function (i) { return '<option value="' + i.id + '">' + i.label + '</option>'; }).join('');
+
+  function populateUnitSelects(cat) {
+    var opts;
+    if (cat === 'temp') opts = ['°F', '°C'];
+    else if (cat === 'ingredient') opts = INGREDIENT_UNITS;
+    else opts = CATEGORIES[cat].order;
+    var html = opts.map(function (u) { return '<option value="' + u + '">' + u + '</option>'; }).join('');
+    fromUnit.innerHTML = html;
+    toUnit.innerHTML = html;
+    if (cat === 'temp') { fromUnit.value = '°F'; toUnit.value = '°C'; }
+    else if (cat === 'ingredient') { fromUnit.value = 'cup'; toUnit.value = 'g'; }
+    else { fromUnit.value = CATEGORIES[cat].defaults[0]; toUnit.value = CATEGORIES[cat].defaults[1]; }
+  }
+
+  function convertLinear(cat, value, from, to) {
+    var units = CATEGORIES[cat].units;
+    return (value * units[from]) / units[to];
+  }
+
+  function convertTemp(value, from, to) {
+    if (from === to) return value;
+    var c = from === '°F' ? (value - 32) * 5 / 9 : value;
+    return to === '°F' ? c * 9 / 5 + 32 : c;
+  }
+
+  function ingredientGramsPerCup() {
+    var id = ingredientSelect.value;
+    var ing = INGREDIENTS.filter(function (i) { return i.id === id; })[0];
+    return ing ? ing.gramsPerCup : 0;
+  }
+
+  function toGrams(value, unit, gramsPerCup) {
+    if (unit === 'g') return value;
+    if (unit === 'oz') return value * GRAMS_PER_OZ;
+    if (unit === 'cup') return value * gramsPerCup;
+    if (unit === 'tbsp') return value * (gramsPerCup / 16);
+    if (unit === 'tsp') return value * (gramsPerCup / 48);
+    return 0;
+  }
+  function fromGrams(grams, unit, gramsPerCup) {
+    if (unit === 'g') return grams;
+    if (unit === 'oz') return grams / GRAMS_PER_OZ;
+    if (unit === 'cup') return grams / gramsPerCup;
+    if (unit === 'tbsp') return grams / (gramsPerCup / 16);
+    if (unit === 'tsp') return grams / (gramsPerCup / 48);
+    return 0;
+  }
+
+  function formatNum(n) {
+    if (!isFinite(n)) return '—';
+    var rounded = Math.round(n * 1000) / 1000;
+    if (Math.abs(rounded) >= 100) rounded = Math.round(n * 100) / 100;
+    return String(rounded);
+  }
+
+  function recalc() {
+    var value = parseFloat(fromValue.value);
+    if (isNaN(value)) { resultValue.textContent = '—'; resultUnitLabel.textContent = ''; return; }
+    var out;
+    if (currentCat === 'temp') out = convertTemp(value, fromUnit.value, toUnit.value);
+    else if (currentCat === 'ingredient') {
+      var gramsPerCup = ingredientGramsPerCup();
+      out = fromGrams(toGrams(value, fromUnit.value, gramsPerCup), toUnit.value, gramsPerCup);
+    } else out = convertLinear(currentCat, value, fromUnit.value, toUnit.value);
+    resultValue.textContent = formatNum(out);
+    resultUnitLabel.textContent = toUnit.value;
+  }
+
+  function switchCategory(cat) {
+    currentCat = cat;
+    var tabs = catTabs.querySelectorAll('.cat-tab');
+    for (var i = 0; i < tabs.length; i++) tabs[i].classList.toggle('active', tabs[i].getAttribute('data-cat') === cat);
+    ingredientPicker.hidden = cat !== 'ingredient';
+    noteEl.hidden = cat !== 'ingredient';
+    if (cat === 'ingredient') noteEl.textContent = 'Approximate — based on standard ingredient densities. Packing and brand vary.';
+    populateUnitSelects(cat);
+    fromValue.value = 1;
+    recalc();
+  }
+
+  catTabs.addEventListener('click', function (e) {
+    var btn = e.target.closest('.cat-tab');
+    if (btn) switchCategory(btn.getAttribute('data-cat'));
+  });
+
+  swapBtn.addEventListener('click', function () {
+    var a = fromUnit.value, b = toUnit.value;
+    fromUnit.value = b; toUnit.value = a;
+    recalc();
+  });
+
+  fromValue.addEventListener('input', recalc);
+  fromUnit.addEventListener('change', recalc);
+  toUnit.addEventListener('change', recalc);
+  ingredientSelect.addEventListener('change', recalc);
+
+  switchCategory('volume');
+})();
+</script>
+</body>
+</html>

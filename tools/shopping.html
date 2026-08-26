@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shopping Lists — The Gardners</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="/styles.css" rel="stylesheet">
+<style>
+  .add-list-row { display: flex; gap: 8px; margin-bottom: 16px; }
+  .add-list-row[hidden] { display: none; }
+
+  form.add-row { display: flex; gap: 8px; margin-bottom: 18px; }
+  form.add-row input[type="text"] { flex: 1; }
+
+  ul.items { list-style: none; display: flex; flex-direction: column; gap: 2px; }
+
+  li.item { display: flex; align-items: center; gap: 12px; padding: 9px 4px; border-radius: 7px; transition: background 0.15s ease; }
+  li.item:hover { background: var(--surface-2); }
+
+  .check {
+    width: 18px; height: 18px; border-radius: 5px; border: 1px solid var(--border-strong);
+    background: transparent; flex-shrink: 0; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; padding: 0;
+  }
+  .check:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .check.done { background: var(--done); border-color: var(--done); }
+  .check.done::after {
+    content: ''; width: 8px; height: 5px;
+    border-left: 2px solid #0d0f12; border-bottom: 2px solid #0d0f12;
+    transform: rotate(-45deg) translateY(-1px);
+  }
+  .check:disabled { cursor: default; }
+
+  .item-text { flex: 1; font-size: 0.95rem; word-break: break-word; }
+  .item-text.done { color: var(--faint); text-decoration: line-through; }
+
+  .remove {
+    background: transparent; border: none; color: var(--faint);
+    font-family: 'IBM Plex Mono', monospace; font-size: 14px; line-height: 1; cursor: pointer;
+    padding: 4px 6px; border-radius: 5px; opacity: 0; transition: opacity 0.15s ease, color 0.15s ease, background 0.15s ease;
+  }
+  li.item:hover .remove, .remove:focus-visible { opacity: 1; }
+  .remove:hover { color: #c98a8a; background: var(--surface); }
+  .remove:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; opacity: 1; }
+
+  .empty { color: var(--faint); font-size: 0.92rem; padding: 10px 4px; }
+
+  .footer-row { display: flex; align-items: center; justify-content: space-between; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border); }
+  .footer-row .mono { color: var(--faint); }
+
+  .clear-btn {
+    background: transparent; border: 1px solid var(--border); border-radius: 6px; padding: 6px 11px;
+    color: var(--muted); font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.08em;
+    text-transform: uppercase; cursor: pointer; transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  .clear-btn:hover { background: var(--surface-2); border-color: var(--border-strong); }
+  .clear-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <a class="back-link mono" href="/#tools">&larr; Back to The Gardners</a>
+  <div class="eyebrow mono">The Gardners &middot; Household</div>
+  <h1>Shopping Lists</h1>
+  <div class="status" id="status-row">
+    <span class="dot" id="status-dot"></span>
+    <span class="mono" id="status-text">Loading&hellip;</span>
+  </div>
+
+  <div class="tabs" id="tabs-row"></div>
+  <div class="add-list-row" id="add-list-row" hidden>
+    <input type="text" id="new-list-name" placeholder="List name&hellip;" maxlength="40">
+    <button type="button" class="primary-btn" id="add-list-confirm">Add</button>
+    <button type="button" class="ghost-btn" id="add-list-cancel">Cancel</button>
+  </div>
+
+  <div class="card">
+    <form class="add-row" id="add-form">
+      <label for="new-item" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);">Add an item</label>
+      <input type="text" id="new-item" placeholder="Add an item&hellip;" autocomplete="off" maxlength="120">
+      <button type="submit" class="primary-btn" id="add-btn">Add</button>
+    </form>
+    <ul class="items" id="items-list" aria-label="List items"></ul>
+    <div class="footer-row">
+      <span class="mono" id="summary">&nbsp;</span>
+      <button type="button" class="clear-btn" id="clear-btn" hidden>Clear checked</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var API = '/api/shopping-lists';
+  var STORAGE_KEY = 'ghub-shopping-active-list';
+  var POLL_MS = 8000;
+
+  var state = { lists: [] };
+  var activeListId = null;
+  var pendingDeleteId = null;
+  var pendingDeleteTimer = null;
+  var loaded = false;
+
+  var tabsRow = document.getElementById('tabs-row');
+  var addListRow = document.getElementById('add-list-row');
+  var newListInput = document.getElementById('new-list-name');
+  var listEl = document.getElementById('items-list');
+  var summaryEl = document.getElementById('summary');
+  var clearBtn = document.getElementById('clear-btn');
+  var addForm = document.getElementById('add-form');
+  var newItemInput = document.getElementById('new-item');
+  var statusDot = document.getElementById('status-dot');
+  var statusText = document.getElementById('status-text');
+
+  function escapeHtml(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  function setStatus(mode) {
+    if (mode === 'synced') { statusDot.className = 'dot'; statusText.className = 'mono'; statusText.textContent = 'Synced live'; }
+    else if (mode === 'syncing') { statusDot.className = 'dot'; statusText.className = 'mono'; statusText.textContent = 'Saving…'; }
+    else if (mode === 'error') { statusDot.className = 'dot pending'; statusText.className = 'mono err'; statusText.textContent = 'Sync error — try again'; }
+  }
+
+  function isTyping() {
+    var el = document.activeElement;
+    return el && (el === newItemInput || el === newListInput || el.classList.contains('tab-rename-input'));
+  }
+
+  function getActiveList() {
+    for (var i = 0; i < state.lists.length; i++) if (state.lists[i].id === activeListId) return state.lists[i];
+    return state.lists[0] || null;
+  }
+
+  function renderTabs() {
+    var html = '';
+    for (var i = 0; i < state.lists.length; i++) {
+      var l = state.lists[i];
+      var active = l.id === activeListId;
+      var pending = l.id === pendingDeleteId;
+      html +=
+        '<div class="tab' + (active ? ' active' : '') + '" data-id="' + escapeHtml(l.id) + '">' +
+        '<button type="button" class="tab-label" data-id="' + escapeHtml(l.id) + '">' + escapeHtml(l.name) + '</button>' +
+        '<button type="button" class="tab-close' + (pending ? ' pending' : '') + '" data-id="' + escapeHtml(l.id) + '" aria-label="' + (pending ? 'Confirm delete ' : 'Delete ') + escapeHtml(l.name) + '"' + (state.lists.length > 1 ? '' : ' disabled') + '>' + (pending ? '&check;' : '&times;') + '</button>' +
+        '</div>';
+    }
+    html += '<button type="button" class="tab-add" id="add-list-btn">+ List</button>';
+    tabsRow.innerHTML = html;
+    var addBtn = document.getElementById('add-list-btn');
+    if (addBtn) addBtn.addEventListener('click', function () {
+      addListRow.hidden = false;
+      newListInput.value = '';
+      newListInput.focus();
+    });
+  }
+
+  function renderItems() {
+    var active = getActiveList();
+    var items = active ? active.items : [];
+    if (items.length === 0) {
+      listEl.innerHTML = '<li class="empty">Nothing on this list yet.</li>';
+    } else {
+      var html = '';
+      for (var i = 0; i < items.length; i++) {
+        var it = items[i];
+        html +=
+          '<li class="item" data-id="' + escapeHtml(it.id) + '">' +
+          '<button type="button" class="check' + (it.done ? ' done' : '') + '" aria-pressed="' + (it.done ? 'true' : 'false') + '" aria-label="' + (it.done ? 'Mark ' : 'Check off ') + escapeHtml(it.text) + '"></button>' +
+          '<span class="item-text' + (it.done ? ' done' : '') + '">' + escapeHtml(it.text) + '</span>' +
+          '<button type="button" class="remove" aria-label="Remove ' + escapeHtml(it.text) + '">&times;</button>' +
+          '</li>';
+      }
+      listEl.innerHTML = html;
+    }
+    var doneCount = items.filter(function (it) { return it.done; }).length;
+    summaryEl.textContent = doneCount + ' of ' + items.length + ' done';
+    clearBtn.hidden = doneCount === 0;
+  }
+
+  function render() {
+    renderTabs();
+    renderItems();
+  }
+
+  async function api(path, options) {
+    var res = await fetch(API + path, options);
+    if (!res.ok) {
+      var body = await res.json().catch(function () { return {}; });
+      throw new Error(body.error || ('request failed: ' + res.status));
+    }
+    return res.status === 204 ? null : res.json();
+  }
+
+  async function load(showSyncing) {
+    if (showSyncing) setStatus('syncing');
+    try {
+      var data = await fetch(API).then(function (r) { return r.json(); });
+      state = data;
+      if (!activeListId || !state.lists.some(function (l) { return l.id === activeListId; })) {
+        try {
+          var stored = sessionStorage.getItem(STORAGE_KEY);
+          activeListId = (stored && state.lists.some(function (l) { return l.id === stored; })) ? stored : (state.lists[0] && state.lists[0].id);
+        } catch (e) {
+          activeListId = state.lists[0] && state.lists[0].id;
+        }
+      }
+      loaded = true;
+      setStatus('synced');
+      if (!isTyping()) render();
+    } catch (e) {
+      setStatus('error');
+    }
+  }
+
+  addForm.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    var text = newItemInput.value.trim();
+    if (!text || !activeListId) return;
+    newItemInput.value = '';
+    setStatus('syncing');
+    try {
+      await api('/' + activeListId + '/items', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ text: text }) });
+      await load();
+    } catch (e) { setStatus('error'); }
+  });
+
+  listEl.addEventListener('click', async function (e) {
+    var checkBtn = e.target.closest('.check');
+    var removeBtn = e.target.closest('.remove');
+    var li = e.target.closest('li.item');
+    if (!li) return;
+    var id = li.getAttribute('data-id');
+    if (checkBtn) {
+      var active = getActiveList();
+      var item = active.items.filter(function (it) { return it.id === id; })[0];
+      if (!item) return;
+      setStatus('syncing');
+      try {
+        await fetch('/api/shopping-items/' + id, { method: 'PATCH', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ done: !item.done }) });
+        await load();
+      } catch (err) { setStatus('error'); }
+    } else if (removeBtn) {
+      setStatus('syncing');
+      try {
+        await fetch('/api/shopping-items/' + id, { method: 'DELETE' });
+        await load();
+      } catch (err) { setStatus('error'); }
+    }
+  });
+
+  clearBtn.addEventListener('click', async function () {
+    if (!activeListId) return;
+    setStatus('syncing');
+    try {
+      await api('/' + activeListId + '/clear-checked', { method: 'POST' });
+      await load();
+    } catch (e) { setStatus('error'); }
+  });
+
+  tabsRow.addEventListener('click', async function (e) {
+    var labelBtn = e.target.closest('.tab-label');
+    var closeBtn = e.target.closest('.tab-close');
+    if (labelBtn) {
+      var id = labelBtn.getAttribute('data-id');
+      if (pendingDeleteId) { pendingDeleteId = null; clearTimeout(pendingDeleteTimer); }
+      if (id !== activeListId) {
+        activeListId = id;
+        try { sessionStorage.setItem(STORAGE_KEY, activeListId); } catch (err) {}
+      }
+      render();
+    } else if (closeBtn && !closeBtn.disabled) {
+      var delId = closeBtn.getAttribute('data-id');
+      if (pendingDeleteId !== delId) {
+        pendingDeleteId = delId;
+        clearTimeout(pendingDeleteTimer);
+        pendingDeleteTimer = setTimeout(function () { pendingDeleteId = null; renderTabs(); }, 3000);
+        renderTabs();
+        return;
+      }
+      clearTimeout(pendingDeleteTimer);
+      pendingDeleteId = null;
+      setStatus('syncing');
+      try {
+        await fetch('/api/shopping-lists/' + delId, { method: 'DELETE' });
+        activeListId = null;
+        await load();
+      } catch (err) { setStatus('error'); }
+    }
+  });
+
+  tabsRow.addEventListener('dblclick', function (e) {
+    var labelBtn = e.target.closest('.tab-label');
+    if (!labelBtn) return;
+    var id = labelBtn.getAttribute('data-id');
+    var list = state.lists.filter(function (l) { return l.id === id; })[0];
+    if (!list) return;
+    var input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'tab-rename-input';
+    input.value = list.name;
+    input.maxLength = 40;
+    labelBtn.replaceWith(input);
+    input.focus();
+    input.select();
+    async function commit() {
+      var name = input.value.trim();
+      if (name && name !== list.name) {
+        setStatus('syncing');
+        try {
+          await fetch('/api/shopping-lists/' + id, { method: 'PATCH', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ name: name }) });
+          await load();
+        } catch (err) { setStatus('error'); }
+      } else {
+        render();
+      }
+    }
+    input.addEventListener('blur', commit);
+    input.addEventListener('keydown', function (ke) {
+      if (ke.key === 'Enter') { ke.preventDefault(); input.blur(); }
+      else if (ke.key === 'Escape') { ke.preventDefault(); render(); }
+    });
+  });
+
+  document.getElementById('add-list-confirm').addEventListener('click', async function () {
+    var name = newListInput.value.trim();
+    if (!name) { newListInput.focus(); return; }
+    addListRow.hidden = true;
+    setStatus('syncing');
+    try {
+      var created = await api('', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ name: name }) });
+      activeListId = created.id;
+      await load();
+    } catch (e) { setStatus('error'); }
+  });
+  document.getElementById('add-list-cancel').addEventListener('click', function () { addListRow.hidden = true; });
+  newListInput.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') { e.preventDefault(); document.getElementById('add-list-confirm').click(); }
+    else if (e.key === 'Escape') { addListRow.hidden = true; }
+  });
+
+  load(true);
+  setInterval(function () { load(false); }, POLL_MS);
+})();
+</script>
+</body>
+</html>
