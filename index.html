@@ -209,15 +209,15 @@
 
     section { padding-top: 72px; }
 
-    .apps .grid {
+    .apps .grid, .tools .grid {
       grid-template-columns: repeat(4, 1fr);
       grid-auto-rows: 172px;
       gap: 18px;
       max-height: calc(172px * 2 + 18px); /* 2-row cap; 9+ items scroll */
       overflow-y: auto;
     }
-    .apps .card { padding: 26px 24px 24px; }
-    .apps .card h3 { margin-top: auto; }
+    .apps .card, .tools .card { padding: 26px 24px 24px; }
+    .apps .card h3, .tools .card h3 { margin-top: auto; }
 
     .resources .grid {
       grid-template-columns: repeat(4, 1fr);
@@ -247,6 +247,7 @@
   <a class="wordmark" href="#">The Gardners<span>.xyz</span></a>
   <ul class="nav-links">
     <li><a href="#apps">Apps</a></li>
+    <li><a href="#tools">Tools</a></li>
     <li><a href="#resources">Resources</a></li>
     <!-- Future pages go here, e.g. <li><a href="/plan/">3-Year Plan</a></li> -->
   </ul>
@@ -297,6 +298,15 @@
     </div>
   </section>
 
+  <section id="tools" class="tools">
+    <div class="section-head">
+      <h2>Tools</h2>
+      <span class="mono">04</span>
+    </div>
+    <!-- Cards below are rendered from tools.js — edit that file, not this markup -->
+    <div class="grid"></div>
+  </section>
+
   <section id="resources" class="resources">
     <div class="section-head">
       <h2>Resources</h2>
@@ -313,6 +323,43 @@
 
 </div>
 
+<script src="tools.js"></script>
+<script>
+  (function () {
+    var grid = document.querySelector('#tools .grid');
+    var count = document.querySelector('#tools .section-head .mono');
+    if (!grid || typeof TOOLS === 'undefined') return;
+
+    grid.innerHTML = '';
+    TOOLS.forEach(function (item) {
+      var card = document.createElement('a');
+      card.className = 'card';
+      card.href = item.url;
+      card.target = '_blank';
+      card.rel = 'noopener noreferrer';
+      card.setAttribute('aria-label', item.label + (item.description ? ' — ' + item.description : ''));
+
+      var status = document.createElement('span');
+      status.className = 'status';
+      status.innerHTML = '<span class="dot"></span><span class="mono">Live</span>';
+      card.appendChild(status);
+
+      var h3 = document.createElement('h3');
+      h3.textContent = item.label;
+      card.appendChild(h3);
+
+      if (item.description) {
+        var p = document.createElement('p');
+        p.textContent = item.description;
+        card.appendChild(p);
+      }
+
+      grid.appendChild(card);
+    });
+
+    if (count) count.textContent = String(TOOLS.length).padStart(2, '0');
+  })();
+</script>
 <script src="resources.js"></script>
 <script>
   (function () {
