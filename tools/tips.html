@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>House Tips — The Gardners</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="/styles.css" rel="stylesheet">
+<style>
+  .card { padding: 24px 22px; margin-bottom: 14px; }
+  .tip-text { font-size: 1.05rem; line-height: 1.55; min-height: 3.2em; }
+  .tip-count { color: var(--faint); font-size: 0.8rem; margin-top: 14px; }
+
+  .actions-row { display: flex; gap: 8px; margin-bottom: 20px; }
+
+  .manage-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px 20px; }
+  .manage-panel[hidden] { display: none; }
+  .manage-panel h2 { font-size: 0.95rem; font-weight: 600; margin-bottom: 14px; }
+
+  ul.tip-list { list-style: none; display: flex; flex-direction: column; gap: 2px; margin-bottom: 14px; }
+  li.tip-row { display: flex; align-items: center; gap: 10px; padding: 8px 4px; border-radius: 7px; }
+  li.tip-row:hover { background: var(--surface-2); }
+  .tip-row-text {
+    flex: 1; font-size: 0.9rem; line-height: 1.4; cursor: text; padding: 4px 6px; border-radius: 5px; word-break: break-word;
+  }
+  .tip-row-text:hover { background: var(--surface); }
+  .tip-row-edit {
+    flex: 1; background: var(--surface-2); border: 1px solid var(--accent); border-radius: 5px; padding: 4px 6px;
+    color: var(--text); font-family: 'Instrument Sans', sans-serif; font-size: 0.9rem;
+  }
+  .tip-row-remove {
+    background: transparent; border: none; color: var(--faint); font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px; line-height: 1; cursor: pointer; padding: 4px 6px; border-radius: 5px; opacity: 0; flex-shrink: 0;
+  }
+  li.tip-row:hover .tip-row-remove, .tip-row-remove:focus-visible { opacity: 1; }
+  .tip-row-remove:hover { color: #c98a8a; background: var(--surface); }
+  .tip-row-remove:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; opacity: 1; }
+
+  .empty { color: var(--faint); font-size: 0.9rem; padding: 8px 4px 14px; }
+
+  .add-tip-row { display: flex; gap: 8px; }
+  .add-tip-row input[type="text"] { flex: 1; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <a class="back-link mono" href="/#tools">&larr; Back to The Gardners</a>
+  <div class="eyebrow mono">The Gardners &middot; Household</div>
+  <h1>House Tip</h1>
+  <div class="status" id="status-row">
+    <span class="dot" id="status-dot"></span>
+    <span class="mono" id="status-text">Loading&hellip;</span>
+  </div>
+
+  <div class="card">
+    <p class="tip-text" id="tip-text">Loading&hellip;</p>
+    <p class="tip-count mono" id="tip-count"></p>
+  </div>
+
+  <div class="actions-row">
+    <button type="button" class="primary-btn" id="next-tip-btn">Next tip</button>
+    <button type="button" class="ghost-btn" id="manage-toggle-btn">Manage tips</button>
+  </div>
+
+  <div class="manage-panel" id="manage-panel" hidden>
+    <h2>All tips</h2>
+    <ul class="tip-list" id="tip-list"></ul>
+    <form class="add-tip-row" id="add-tip-form">
+      <label for="new-tip-input" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);">Add a tip</label>
+      <input type="text" id="new-tip-input" placeholder="Add a tip&hellip;" maxlength="200" autocomplete="off">
+      <button type="submit" class="primary-btn">Add</button>
+    </form>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var POLL_MS = 8000;
+  var state = { tips: [] };
+  var tipIndex = 0;
+  var manageOpen = false;
+  var editingId = null;
+
+  var statusDot = document.getElementById('status-dot');
+  var statusText = document.getElementById('status-text');
+  var tipTextEl = document.getElementById('tip-text');
+  var tipCountEl = document.getElementById('tip-count');
+  var nextBtn = document.getElementById('next-tip-btn');
+  var manageToggleBtn = document.getElementById('manage-toggle-btn');
+  var managePanel = document.getElementById('manage-panel');
+  var tipListEl = document.getElementById('tip-list');
+  var addTipForm = document.getElementById('add-tip-form');
+  var newTipInput = document.getElementById('new-tip-input');
+
+  function escapeHtml(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  function setStatus(mode) {
+    if (mode === 'synced') { statusDot.className = 'dot'; statusText.className = 'mono'; statusText.textContent = 'Synced live'; }
+    else if (mode === 'syncing') { statusDot.className = 'dot'; statusText.className = 'mono'; statusText.textContent = 'Saving…'; }
+    else if (mode === 'error') { statusDot.className = 'dot pending'; statusText.className = 'mono err'; statusText.textContent = 'Sync error — try again'; }
+  }
+
+  function isTyping() {
+    return editingId !== null || document.activeElement === newTipInput;
+  }
+
+  function renderTip() {
+    if (state.tips.length === 0) {
+      tipTextEl.textContent = 'No tips yet — add one below.';
+      tipCountEl.textContent = '';
+      nextBtn.disabled = true;
+      return;
+    }
+    nextBtn.disabled = false;
+    if (tipIndex >= state.tips.length) tipIndex = 0;
+    tipTextEl.textContent = state.tips[tipIndex].text;
+    tipCountEl.textContent = (tipIndex + 1) + ' of ' + state.tips.length;
+  }
+
+  function renderManageList() {
+    if (state.tips.length === 0) {
+      tipListEl.innerHTML = '<li class="empty">No tips yet.</li>';
+      return;
+    }
+    var html = '';
+    for (var i = 0; i < state.tips.length; i++) {
+      var t = state.tips[i];
+      html +=
+        '<li class="tip-row" data-id="' + escapeHtml(t.id) + '">' +
+        '<span class="tip-row-text" tabindex="0" role="button">' + escapeHtml(t.text) + '</span>' +
+        '<button type="button" class="tip-row-remove" aria-label="Remove tip">&times;</button>' +
+        '</li>';
+    }
+    tipListEl.innerHTML = html;
+  }
+
+  function render() { renderTip(); renderManageList(); }
+
+  async function load(showSyncing) {
+    if (showSyncing) setStatus('syncing');
+    try {
+      var data = await fetch('/api/tips').then(function (r) { return r.json(); });
+      state = data;
+      setStatus('synced');
+      if (!isTyping()) render();
+    } catch (e) {
+      setStatus('error');
+    }
+  }
+
+  nextBtn.addEventListener('click', function () {
+    if (state.tips.length === 0) return;
+    tipIndex = (tipIndex + 1) % state.tips.length;
+    renderTip();
+  });
+
+  manageToggleBtn.addEventListener('click', function () {
+    manageOpen = !manageOpen;
+    managePanel.hidden = !manageOpen;
+    manageToggleBtn.classList.toggle('active', manageOpen);
+    manageToggleBtn.textContent = manageOpen ? 'Hide tips' : 'Manage tips';
+  });
+
+  addTipForm.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    var text = newTipInput.value.trim();
+    if (!text) return;
+    newTipInput.value = '';
+    setStatus('syncing');
+    try {
+      await fetch('/api/tips', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ text: text }) });
+      await load();
+    } catch (err) { setStatus('error'); }
+  });
+
+  tipListEl.addEventListener('click', function (e) {
+    var removeBtn = e.target.closest('.tip-row-remove');
+    var textEl = e.target.closest('.tip-row-text');
+    var li = e.target.closest('li.tip-row');
+    if (!li) return;
+    var id = li.getAttribute('data-id');
+    if (removeBtn) {
+      setStatus('syncing');
+      fetch('/api/tips/' + id, { method: 'DELETE' }).then(load).catch(function () { setStatus('error'); });
+    } else if (textEl) {
+      startEdit(li, id);
+    }
+  });
+  tipListEl.addEventListener('keydown', function (e) {
+    var textEl = e.target.closest('.tip-row-text');
+    if (textEl && (e.key === 'Enter' || e.key === ' ')) {
+      e.preventDefault();
+      var li = e.target.closest('li.tip-row');
+      startEdit(li, li.getAttribute('data-id'));
+    }
+  });
+
+  function startEdit(li, id) {
+    var current = state.tips.filter(function (t) { return t.id === id; })[0];
+    if (!current) return;
+    editingId = id;
+    var textEl = li.querySelector('.tip-row-text');
+    var input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'tip-row-edit';
+    input.value = current.text;
+    input.maxLength = 200;
+    textEl.replaceWith(input);
+    input.focus();
+    input.select();
+    async function commit() {
+      var val = input.value.trim();
+      editingId = null;
+      if (val && val !== current.text) {
+        setStatus('syncing');
+        try {
+          await fetch('/api/tips/' + id, { method: 'PATCH', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ text: val }) });
+          await load();
+        } catch (err) { setStatus('error'); }
+      } else {
+        renderManageList();
+      }
+    }
+    input.addEventListener('blur', commit);
+    input.addEventListener('keydown', function (ke) {
+      if (ke.key === 'Enter') { ke.preventDefault(); input.blur(); }
+      else if (ke.key === 'Escape') { ke.preventDefault(); editingId = null; renderManageList(); }
+    });
+  }
+
+  tipIndex = Math.floor(Math.random() * 5);
+  load(true);
+  setInterval(function () { load(false); }, POLL_MS);
+})();
+</script>
+</body>
+</html>

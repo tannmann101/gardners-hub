@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Next Up — The Gardners</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="/styles.css" rel="stylesheet">
+<style>
+  .card { padding: 26px 24px 24px; }
+
+  .cd-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 22px; }
+  .cd-label { font-size: 1.2rem; font-weight: 600; letter-spacing: -0.01em; word-break: break-word; }
+  .cd-date { font-size: 0.85rem; color: var(--faint); margin-top: 4px; }
+  .edit-btn {
+    background: transparent; border: 1px solid var(--border); border-radius: 6px; padding: 6px 11px; flex-shrink: 0;
+    color: var(--muted); font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.08em;
+    text-transform: uppercase; cursor: pointer; transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  .edit-btn:hover { background: var(--surface-2); border-color: var(--border-strong); }
+  .edit-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+  .clock { display: flex; gap: 18px; }
+  .clock .unit { text-align: center; }
+  .clock .num { font-family: 'IBM Plex Mono', monospace; font-size: 2.1rem; font-weight: 500; color: var(--accent); line-height: 1; }
+  .clock .lbl { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--faint); display: block; margin-top: 6px; }
+
+  .arrived { font-size: 1.05rem; color: var(--accent); padding: 8px 0 4px; }
+
+  .empty-state { color: var(--faint); font-size: 0.95rem; }
+
+  .cd-form { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+  .cd-form[hidden] { display: none; }
+  .cd-form label { font-size: 0.8rem; color: var(--muted); }
+  .cd-form input[type="text"], .cd-form input[type="datetime-local"] { width: 100%; }
+  .cd-form .row { display: flex; flex-direction: column; gap: 4px; }
+  .cd-form .actions { display: flex; gap: 8px; margin-top: 2px; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <a class="back-link mono" href="/#tools">&larr; Back to The Gardners</a>
+  <div class="eyebrow mono">The Gardners &middot; Household</div>
+  <h1>Next Up</h1>
+  <div class="status" id="status-row">
+    <span class="dot" id="status-dot"></span>
+    <span class="mono" id="status-text">Loading&hellip;</span>
+  </div>
+
+  <div class="tabs" id="tabs-row"></div>
+
+  <form class="cd-form" id="cd-form" hidden>
+    <div class="row"><label for="cd-label-input">What</label><input type="text" id="cd-label-input" maxlength="60" placeholder="e.g. Rochelle&rsquo;s birthday"></div>
+    <div class="row"><label for="cd-target-input">When</label><input type="datetime-local" id="cd-target-input"></div>
+    <div class="actions">
+      <button type="submit" class="primary-btn" id="cd-form-submit">Add</button>
+      <button type="button" class="ghost-btn" id="cd-form-cancel">Cancel</button>
+    </div>
+  </form>
+
+  <div class="card" id="cd-card"></div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var STORAGE_KEY = 'ghub-nextup-active';
+  var POLL_MS = 8000;
+
+  var state = { countdowns: [] };
+  var activeId = null;
+  var formMode = null; // 'create' | 'edit' | null
+  var tickTimer = null;
+  var pendingDeleteId = null;
+  var pendingDeleteTimer = null;
+
+  var tabsRow = document.getElementById('tabs-row');
+  var cardEl = document.getElementById('cd-card');
+  var statusDot = document.getElementById('status-dot');
+  var statusText = document.getElementById('status-text');
+  var cdForm = document.getElementById('cd-form');
+  var labelInput = document.getElementById('cd-label-input');
+  var targetInput = document.getElementById('cd-target-input');
+  var formSubmit = document.getElementById('cd-form-submit');
+
+  function escapeHtml(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+  function pad(n) { return String(n).padStart(2, '0'); }
+
+  function setStatus(mode) {
+    if (mode === 'synced') { statusDot.className = 'dot'; statusText.className = 'mono'; statusText.textContent = 'Synced live'; }
+    else if (mode === 'syncing') { statusDot.className = 'dot'; statusText.className = 'mono'; statusText.textContent = 'Saving…'; }
+    else if (mode === 'error') { statusDot.className = 'dot pending'; statusText.className = 'mono err'; statusText.textContent = 'Sync error — try again'; }
+  }
+
+  function isTyping() {
+    return !cdForm.hidden;
+  }
+
+  function getActive() {
+    for (var i = 0; i < state.countdowns.length; i++) if (state.countdowns[i].id === activeId) return state.countdowns[i];
+    return state.countdowns[0] || null;
+  }
+
+  function renderTabs() {
+    var html = '';
+    for (var i = 0; i < state.countdowns.length; i++) {
+      var c = state.countdowns[i];
+      var active = c.id === activeId;
+      var pending = c.id === pendingDeleteId;
+      html +=
+        '<div class="tab' + (active ? ' active' : '') + '" data-id="' + escapeHtml(c.id) + '">' +
+        '<button type="button" class="tab-label" data-id="' + escapeHtml(c.id) + '">' + escapeHtml(c.label) + '</button>' +
+        '<button type="button" class="tab-close' + (pending ? ' pending' : '') + '" data-id="' + escapeHtml(c.id) + '" aria-label="' + (pending ? 'Confirm delete ' : 'Delete ') + escapeHtml(c.label) + '"' + (state.countdowns.length > 1 ? '' : ' disabled') + '>' + (pending ? '&check;' : '&times;') + '</button>' +
+        '</div>';
+    }
+    html += '<button type="button" class="tab-add" id="add-cd-btn">+ Countdown</button>';
+    tabsRow.innerHTML = html;
+    var addBtn = document.getElementById('add-cd-btn');
+    if (addBtn) addBtn.addEventListener('click', function () { openForm('create'); });
+  }
+
+  function fmtDate(iso) {
+    var d = new Date(iso);
+    if (isNaN(d.getTime())) return '';
+    return d.toLocaleString(undefined, { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' });
+  }
+
+  function renderCard() {
+    var active = getActive();
+    if (!active) {
+      cardEl.innerHTML = '<p class="empty-state">No countdowns yet — add one to get started.</p>';
+      if (tickTimer) { clearInterval(tickTimer); tickTimer = null; }
+      return;
+    }
+    cardEl.innerHTML =
+      '<div class="cd-head">' +
+      '<div><div class="cd-label">' + escapeHtml(active.label) + '</div><div class="cd-date">' + escapeHtml(fmtDate(active.target)) + '</div></div>' +
+      '<button type="button" class="edit-btn" id="edit-cd-btn">Edit</button>' +
+      '</div>' +
+      '<div class="clock" id="cd-clock" aria-live="polite">' +
+      '<div class="unit"><span class="num" id="cd-d">--</span><span class="lbl">Days</span></div>' +
+      '<div class="unit"><span class="num" id="cd-h">--</span><span class="lbl">Hrs</span></div>' +
+      '<div class="unit"><span class="num" id="cd-m">--</span><span class="lbl">Min</span></div>' +
+      '<div class="unit"><span class="num" id="cd-s">--</span><span class="lbl">Sec</span></div>' +
+      '</div>';
+    document.getElementById('edit-cd-btn').addEventListener('click', function () { openForm('edit'); });
+    if (tickTimer) clearInterval(tickTimer);
+    tick();
+    tickTimer = setInterval(tick, 1000);
+  }
+
+  function tick() {
+    var active = getActive();
+    if (!active) return;
+    var target = new Date(active.target).getTime();
+    var diff = target - Date.now();
+    var clockEl = document.getElementById('cd-clock');
+    if (!clockEl) return;
+    if (diff <= 0) {
+      clockEl.outerHTML = '<div class="arrived" id="cd-clock-arrived">It&rsquo;s here.</div>';
+      return;
+    }
+    var days = Math.floor(diff / 86400000);
+    var hours = Math.floor((diff % 86400000) / 3600000);
+    var mins = Math.floor((diff % 3600000) / 60000);
+    var secs = Math.floor((diff % 60000) / 1000);
+    document.getElementById('cd-d').textContent = days;
+    document.getElementById('cd-h').textContent = pad(hours);
+    document.getElementById('cd-m').textContent = pad(mins);
+    document.getElementById('cd-s').textContent = pad(secs);
+  }
+
+  function isoToLocalInputValue(iso) {
+    var d = new Date(iso);
+    if (isNaN(d.getTime())) return '';
+    var y = d.getFullYear(), mo = pad(d.getMonth() + 1), da = pad(d.getDate()), h = pad(d.getHours()), mi = pad(d.getMinutes());
+    return y + '-' + mo + '-' + da + 'T' + h + ':' + mi;
+  }
+
+  function openForm(mode) {
+    formMode = mode;
+    cdForm.hidden = false;
+    if (mode === 'edit') {
+      var active = getActive();
+      labelInput.value = active.label;
+      targetInput.value = isoToLocalInputValue(active.target);
+      formSubmit.textContent = 'Save';
+    } else {
+      labelInput.value = '';
+      targetInput.value = '';
+      formSubmit.textContent = 'Add';
+    }
+    labelInput.focus();
+  }
+  function closeForm() { cdForm.hidden = true; formMode = null; }
+
+  function render() { renderTabs(); renderCard(); }
+
+  async function load(showSyncing) {
+    if (showSyncing) setStatus('syncing');
+    try {
+      var data = await fetch('/api/countdowns').then(function (r) { return r.json(); });
+      state = data;
+      if (!activeId || !state.countdowns.some(function (c) { return c.id === activeId; })) {
+        try {
+          var stored = sessionStorage.getItem(STORAGE_KEY);
+          activeId = (stored && state.countdowns.some(function (c) { return c.id === stored; })) ? stored : (state.countdowns[0] && state.countdowns[0].id);
+        } catch (e) {
+          activeId = state.countdowns[0] && state.countdowns[0].id;
+        }
+      }
+      setStatus('synced');
+      if (!isTyping()) render();
+    } catch (e) {
+      setStatus('error');
+    }
+  }
+
+  cdForm.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    var label = labelInput.value.trim();
+    var target = targetInput.value;
+    if (!label || !target) return;
+    setStatus('syncing');
+    try {
+      if (formMode === 'edit') {
+        var active = getActive();
+        await fetch('/api/countdowns/' + active.id, { method: 'PATCH', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ label: label, target: target }) });
+        closeForm();
+        await load();
+      } else {
+        var created = await fetch('/api/countdowns', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ label: label, target: target }) }).then(function (r) { return r.json(); });
+        activeId = created.id;
+        closeForm();
+        await load();
+      }
+    } catch (err) { setStatus('error'); }
+  });
+  document.getElementById('cd-form-cancel').addEventListener('click', closeForm);
+
+  tabsRow.addEventListener('click', async function (e) {
+    var labelBtn = e.target.closest('.tab-label');
+    var closeBtn = e.target.closest('.tab-close');
+    if (labelBtn) {
+      var id = labelBtn.getAttribute('data-id');
+      if (pendingDeleteId) { pendingDeleteId = null; clearTimeout(pendingDeleteTimer); }
+      if (id !== activeId) {
+        activeId = id;
+        try { sessionStorage.setItem(STORAGE_KEY, activeId); } catch (err) {}
+        closeForm();
+      }
+      render();
+    } else if (closeBtn && !closeBtn.disabled) {
+      var delId = closeBtn.getAttribute('data-id');
+      if (pendingDeleteId !== delId) {
+        pendingDeleteId = delId;
+        clearTimeout(pendingDeleteTimer);
+        pendingDeleteTimer = setTimeout(function () { pendingDeleteId = null; renderTabs(); }, 3000);
+        renderTabs();
+        return;
+      }
+      clearTimeout(pendingDeleteTimer);
+      pendingDeleteId = null;
+      setStatus('syncing');
+      try {
+        await fetch('/api/countdowns/' + delId, { method: 'DELETE' });
+        activeId = null;
+        await load();
+      } catch (err) { setStatus('error'); }
+    }
+  });
+
+  load(true);
+  setInterval(function () { load(false); }, POLL_MS);
+})();
+</script>
+</body>
+</html>

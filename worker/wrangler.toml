@@ -1,0 +1,16 @@
+name = "gardners-hub-api"
+main = "src/index.js"
+compatibility_date = "2024-09-23"
+
+# Intercepts /api/* at the Cloudflare edge for thegardners.xyz — the rest
+# of the site keeps being served by GitHub Pages as before. Requires the
+# zone to already be on Cloudflare (it is: Cloudflare already reverse-
+# proxies and Access-gates this site).
+routes = [
+  { pattern = "thegardners.xyz/api/*", zone_name = "thegardners.xyz" }
+]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "gardners-hub"
+database_id = "REPLACE_WITH_YOUR_DATABASE_ID"
