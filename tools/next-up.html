@@ -9,47 +9,68 @@
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link href="/styles.css" rel="stylesheet">
 <style>
-  .card { padding: 26px 24px 24px; }
+  .tabs { justify-content: center; margin-bottom: 8px; }
 
-  .cd-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 22px; }
-  .cd-label { font-size: 1.2rem; font-weight: 600; letter-spacing: -0.01em; word-break: break-word; }
-  .cd-date { font-size: 0.85rem; color: var(--faint); margin-top: 4px; }
+  .cd-stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 56px 24px 64px;
+  }
+
+  .cd-head { display: flex; flex-direction: column; align-items: center; gap: 6px; margin-bottom: 40px; }
+  .cd-label { font-size: clamp(1.5rem, 3.4vw, 2.1rem); font-weight: 700; letter-spacing: -0.01em; word-break: break-word; max-width: 44ch; }
+  .cd-date { font-size: 0.95rem; color: var(--faint); }
   .edit-btn {
-    background: transparent; border: 1px solid var(--border); border-radius: 6px; padding: 6px 11px; flex-shrink: 0;
+    margin-top: 12px;
+    background: transparent; border: 1px solid var(--border); border-radius: 6px; padding: 7px 14px; flex-shrink: 0;
     color: var(--muted); font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.08em;
     text-transform: uppercase; cursor: pointer; transition: background 0.15s ease, border-color 0.15s ease;
   }
   .edit-btn:hover { background: var(--surface-2); border-color: var(--border-strong); }
   .edit-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 
-  .clock { display: flex; gap: 18px; }
+  .clock { display: flex; align-items: baseline; gap: clamp(10px, 2.4vw, 28px); }
   .clock .unit { text-align: center; }
-  .clock .num { font-family: 'IBM Plex Mono', monospace; font-size: 2.1rem; font-weight: 500; color: var(--accent); line-height: 1; }
-  .clock .lbl { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--faint); display: block; margin-top: 6px; }
+  .clock .num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: clamp(3rem, 9vw, 6.5rem);
+    font-weight: 500;
+    color: var(--accent);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    text-shadow: 0 0 44px rgba(138, 180, 216, 0.35);
+    font-variant-numeric: tabular-nums;
+  }
+  .clock .lbl { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint); display: block; margin-top: 10px; }
 
-  .arrived { font-size: 1.05rem; color: var(--accent); padding: 8px 0 4px; }
+  .arrived { font-size: clamp(1.6rem, 4vw, 2.4rem); font-weight: 600; color: var(--accent); padding: 24px 0; }
 
-  .empty-state { color: var(--faint); font-size: 0.95rem; }
+  .empty-state { color: var(--faint); font-size: 1rem; padding: 40px 0; }
 
-  .cd-form { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+  .cd-form {
+    display: flex; flex-direction: column; gap: 10px; margin: 0 auto 24px; max-width: 380px;
+  }
   .cd-form[hidden] { display: none; }
   .cd-form label { font-size: 0.8rem; color: var(--muted); }
   .cd-form input[type="text"], .cd-form input[type="datetime-local"] { width: 100%; }
-  .cd-form .row { display: flex; flex-direction: column; gap: 4px; }
-  .cd-form .actions { display: flex; gap: 8px; margin-top: 2px; }
+  .cd-form .row { display: flex; flex-direction: column; gap: 4px; text-align: left; }
+  .cd-form .actions { display: flex; gap: 8px; margin-top: 2px; justify-content: center; }
 </style>
 </head>
 <body>
 
-<div class="wrap">
-  <a class="back-link mono" href="/#tools">&larr; Back to The Gardners</a>
-  <div class="eyebrow mono">The Gardners &middot; Household</div>
-  <h1>Next Up</h1>
+<nav class="app-nav">
+  <a class="app-back mono" href="/#tools">&larr; The Gardners</a>
+  <span class="app-title">Next Up</span>
   <div class="status" id="status-row">
     <span class="dot" id="status-dot"></span>
     <span class="mono" id="status-text">Loading&hellip;</span>
   </div>
+</nav>
 
+<div class="app-main center-page">
   <div class="tabs" id="tabs-row"></div>
 
   <form class="cd-form" id="cd-form" hidden>
@@ -61,7 +82,10 @@
     </div>
   </form>
 
-  <div class="card" id="cd-card"></div>
+  <div class="hero-shell">
+    <div class="hero-glow" aria-hidden="true"></div>
+    <div class="cd-stage" id="cd-card"></div>
+  </div>
 </div>
 
 <script>
