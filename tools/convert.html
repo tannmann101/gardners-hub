@@ -9,75 +9,92 @@
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link href="/styles.css" rel="stylesheet">
 <style>
-  .cat-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
-  .cat-tab {
-    background: transparent; border: 1px solid var(--border); border-radius: 7px; padding: 8px 12px;
-    color: var(--muted); font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.06em;
-    text-transform: uppercase; cursor: pointer;
-  }
-  .cat-tab.active { background: var(--surface-2); border-color: var(--border-strong); color: var(--text); }
-  .cat-tab:hover { border-color: var(--border-strong); }
-  .cat-tab:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .converter-card { max-width: 480px; padding: 32px 28px; }
 
-  .conv-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+  .conv-row { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
   .conv-row input[type="number"] {
-    width: 100px; font-family: 'IBM Plex Mono', monospace; font-size: 1rem;
+    width: 110px; font-family: 'IBM Plex Mono', monospace; font-size: 1.15rem; padding: 12px 14px;
   }
   select {
     flex: 1; background: var(--surface-2); border: 1px solid var(--border); border-radius: 7px;
-    padding: 10px 10px; color: var(--text); font-family: 'Instrument Sans', sans-serif; font-size: 0.9rem;
+    padding: 12px 10px; color: var(--text); font-family: 'Instrument Sans', sans-serif; font-size: 0.92rem;
     cursor: pointer;
   }
   select:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 
   .swap-btn {
-    background: var(--surface-2); border: 1px solid var(--border); border-radius: 7px; width: 36px; height: 36px;
-    color: var(--muted); cursor: pointer; flex-shrink: 0; font-size: 1rem; display: flex; align-items: center; justify-content: center;
+    background: var(--surface-2); border: 1px solid var(--border); border-radius: 7px; width: 40px; height: 40px;
+    color: var(--muted); cursor: pointer; flex-shrink: 0; font-size: 1.1rem; display: flex; align-items: center; justify-content: center;
   }
   .swap-btn:hover { background: #21262e; border-color: var(--border-strong); color: var(--text); }
   .swap-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 
-  .result-row { display: flex; align-items: baseline; gap: 10px; padding-top: 16px; margin-top: 4px; border-top: 1px solid var(--border); }
-  .result-value { font-family: 'IBM Plex Mono', monospace; font-size: 1.7rem; color: var(--accent); }
-  .result-unit { color: var(--muted); font-size: 0.95rem; }
+  .result-row { display: flex; align-items: baseline; gap: 12px; padding-top: 24px; margin-top: 8px; border-top: 1px solid var(--border); }
+  .result-value {
+    font-family: 'IBM Plex Mono', monospace; font-size: clamp(2.6rem, 6vw, 3.6rem); color: var(--accent);
+    text-shadow: 0 0 44px rgba(138, 180, 216, 0.3); font-variant-numeric: tabular-nums;
+  }
+  .result-unit { color: var(--muted); font-size: 1.05rem; }
 
-  .ingredient-select { margin-bottom: 14px; }
-  .note { color: var(--faint); font-size: 0.8rem; margin-top: 14px; line-height: 1.5; }
+  .ingredient-select { margin-bottom: 18px; }
+  .ingredient-select select { width: 100%; }
+  .note { color: var(--faint); font-size: 0.82rem; margin-top: 20px; line-height: 1.5; }
 </style>
 </head>
 <body>
 
-<div class="wrap">
-  <a class="back-link mono" href="/#tools">&larr; Back to The Gardners</a>
-  <div class="eyebrow mono">The Gardners &middot; Household</div>
-  <h1>Convert Anything</h1>
+<nav class="app-nav">
+  <a class="app-back mono" href="/#tools">&larr; The Gardners</a>
+  <span class="app-title">Convert Anything</span>
+</nav>
 
-  <div class="cat-tabs" id="cat-tabs">
-    <button type="button" class="cat-tab active" data-cat="volume">Volume</button>
-    <button type="button" class="cat-tab" data-cat="weight">Weight</button>
-    <button type="button" class="cat-tab" data-cat="length">Length</button>
-    <button type="button" class="cat-tab" data-cat="temp">Temp</button>
-    <button type="button" class="cat-tab" data-cat="ingredient">Ingredients</button>
-  </div>
-
-  <div class="card">
-    <div id="ingredient-picker" class="ingredient-select" hidden>
-      <select id="ingredient-select" aria-label="Ingredient"></select>
+<div class="app-main center-page">
+  <div class="app-layout">
+    <div class="side-nav" id="cat-tabs">
+      <button type="button" class="side-item active" data-cat="volume">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2s6 7.5 6 12a6 6 0 0 1-12 0c0-4.5 6-12 6-12z"/></svg>
+        <span>Volume</span>
+      </button>
+      <button type="button" class="side-item" data-cat="weight">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M12 8v4l2.5 1.5"/></svg>
+        <span>Weight</span>
+      </button>
+      <button type="button" class="side-item" data-cat="length">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17.5 17.5 3l3.5 3.5L6.5 21z"/><path d="M13.5 6.5l2 2M9.5 10.5l2 2M5.5 14.5l2 2"/></svg>
+        <span>Length</span>
+      </button>
+      <button type="button" class="side-item" data-cat="temp">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 14.5V4.5a2 2 0 0 0-4 0v10a4 4 0 1 0 4 0z"/></svg>
+        <span>Temp</span>
+      </button>
+      <button type="button" class="side-item" data-cat="ingredient">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 19h12"/><path d="M8 19v-6.2A4 4 0 1 1 10.3 6a3 3 0 0 1 5.4 0A4 4 0 1 1 16 12.8V19"/></svg>
+        <span>Ingredients</span>
+      </button>
     </div>
 
-    <div class="conv-row">
-      <input type="number" id="from-value" value="1" aria-label="Value">
-      <select id="from-unit" aria-label="From unit"></select>
-      <button type="button" class="swap-btn" id="swap-btn" aria-label="Swap units">&#8646;</button>
-      <select id="to-unit" aria-label="To unit"></select>
-    </div>
+    <div class="hero-shell">
+      <div class="hero-glow" aria-hidden="true"></div>
+      <div class="card converter-card">
+        <div id="ingredient-picker" class="ingredient-select" hidden>
+          <select id="ingredient-select" aria-label="Ingredient"></select>
+        </div>
 
-    <div class="result-row">
-      <span class="result-value" id="result-value">&mdash;</span>
-      <span class="result-unit" id="result-unit-label"></span>
-    </div>
+        <div class="conv-row">
+          <input type="number" id="from-value" value="1" aria-label="Value">
+          <select id="from-unit" aria-label="From unit"></select>
+          <button type="button" class="swap-btn" id="swap-btn" aria-label="Swap units">&#8646;</button>
+          <select id="to-unit" aria-label="To unit"></select>
+        </div>
 
-    <p class="note" id="note" hidden></p>
+        <div class="result-row">
+          <span class="result-value" id="result-value">&mdash;</span>
+          <span class="result-unit" id="result-unit-label"></span>
+        </div>
+
+        <p class="note" id="note" hidden></p>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -202,7 +219,7 @@
 
   function switchCategory(cat) {
     currentCat = cat;
-    var tabs = catTabs.querySelectorAll('.cat-tab');
+    var tabs = catTabs.querySelectorAll('.side-item');
     for (var i = 0; i < tabs.length; i++) tabs[i].classList.toggle('active', tabs[i].getAttribute('data-cat') === cat);
     ingredientPicker.hidden = cat !== 'ingredient';
     noteEl.hidden = cat !== 'ingredient';
@@ -213,7 +230,7 @@
   }
 
   catTabs.addEventListener('click', function (e) {
-    var btn = e.target.closest('.cat-tab');
+    var btn = e.target.closest('.side-item');
     if (btn) switchCategory(btn.getAttribute('data-cat'));
   });
 

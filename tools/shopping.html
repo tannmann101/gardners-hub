@@ -9,32 +9,43 @@
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link href="/styles.css" rel="stylesheet">
 <style>
+  .list-panel { max-width: 640px; }
+  .list-panel h2 { font-size: 1.3rem; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 10px; word-break: break-word; }
+  .list-progress { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+  .list-progress .progress-track { flex: 1; }
+  .list-progress .mono { color: var(--faint); flex-shrink: 0; }
+
+  .tab-count { font-size: 10px; color: var(--faint); margin-left: auto; flex-shrink: 0; }
+  .tab.active .tab-count { color: var(--muted); }
+
   .add-list-row { display: flex; gap: 8px; margin-bottom: 16px; }
   .add-list-row[hidden] { display: none; }
 
-  form.add-row { display: flex; gap: 8px; margin-bottom: 18px; }
-  form.add-row input[type="text"] { flex: 1; }
+  form.add-row { display: flex; gap: 8px; margin-bottom: 22px; }
+  form.add-row input[type="text"] { flex: 1; padding: 13px 14px; font-size: 1rem; }
+  form.add-row button { padding: 13px 20px; }
 
   ul.items { list-style: none; display: flex; flex-direction: column; gap: 2px; }
 
-  li.item { display: flex; align-items: center; gap: 12px; padding: 9px 4px; border-radius: 7px; transition: background 0.15s ease; }
+  li.item { display: flex; align-items: center; gap: 14px; padding: 13px 6px; border-radius: 8px; transition: background 0.15s ease; border-bottom: 1px solid var(--border); }
+  li.item:last-child { border-bottom: none; }
   li.item:hover { background: var(--surface-2); }
 
   .check {
-    width: 18px; height: 18px; border-radius: 5px; border: 1px solid var(--border-strong);
+    width: 21px; height: 21px; border-radius: 6px; border: 1.5px solid var(--border-strong);
     background: transparent; flex-shrink: 0; cursor: pointer;
     display: flex; align-items: center; justify-content: center; padding: 0;
   }
   .check:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   .check.done { background: var(--done); border-color: var(--done); }
   .check.done::after {
-    content: ''; width: 8px; height: 5px;
+    content: ''; width: 9px; height: 6px;
     border-left: 2px solid #0d0f12; border-bottom: 2px solid #0d0f12;
     transform: rotate(-45deg) translateY(-1px);
   }
   .check:disabled { cursor: default; }
 
-  .item-text { flex: 1; font-size: 0.95rem; word-break: break-word; }
+  .item-text { flex: 1; font-size: 1.02rem; word-break: break-word; }
   .item-text.done { color: var(--faint); text-decoration: line-through; }
 
   .remove {
@@ -62,32 +73,40 @@
 </head>
 <body>
 
-<div class="wrap">
-  <a class="back-link mono" href="/#tools">&larr; Back to The Gardners</a>
-  <div class="eyebrow mono">The Gardners &middot; Household</div>
-  <h1>Shopping Lists</h1>
+<nav class="app-nav">
+  <a class="app-back mono" href="/#tools">&larr; The Gardners</a>
+  <span class="app-title">Shopping Lists</span>
   <div class="status" id="status-row">
     <span class="dot" id="status-dot"></span>
     <span class="mono" id="status-text">Loading&hellip;</span>
   </div>
+</nav>
 
-  <div class="tabs" id="tabs-row"></div>
-  <div class="add-list-row" id="add-list-row" hidden>
-    <input type="text" id="new-list-name" placeholder="List name&hellip;" maxlength="40">
-    <button type="button" class="primary-btn" id="add-list-confirm">Add</button>
-    <button type="button" class="ghost-btn" id="add-list-cancel">Cancel</button>
-  </div>
+<div class="app-main">
+  <div class="app-layout">
+    <div>
+      <div class="tabs tabs-vertical" id="tabs-row"></div>
+      <div class="add-list-row" id="add-list-row" hidden>
+        <input type="text" id="new-list-name" placeholder="List name&hellip;" maxlength="40">
+        <button type="button" class="primary-btn" id="add-list-confirm">Add</button>
+        <button type="button" class="ghost-btn" id="add-list-cancel">Cancel</button>
+      </div>
+    </div>
 
-  <div class="card">
-    <form class="add-row" id="add-form">
-      <label for="new-item" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);">Add an item</label>
-      <input type="text" id="new-item" placeholder="Add an item&hellip;" autocomplete="off" maxlength="120">
-      <button type="submit" class="primary-btn" id="add-btn">Add</button>
-    </form>
-    <ul class="items" id="items-list" aria-label="List items"></ul>
-    <div class="footer-row">
-      <span class="mono" id="summary">&nbsp;</span>
-      <button type="button" class="clear-btn" id="clear-btn" hidden>Clear checked</button>
+    <div class="list-panel">
+      <h2 id="list-name-heading">&nbsp;</h2>
+      <div class="list-progress">
+        <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+        <span class="mono" id="summary">&nbsp;</span>
+        <button type="button" class="clear-btn" id="clear-btn" hidden>Clear checked</button>
+      </div>
+
+      <form class="add-row" id="add-form">
+        <label for="new-item" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);">Add an item</label>
+        <input type="text" id="new-item" placeholder="Add an item&hellip;" autocomplete="off" maxlength="120">
+        <button type="submit" class="primary-btn" id="add-btn">Add</button>
+      </form>
+      <ul class="items" id="items-list" aria-label="List items"></ul>
     </div>
   </div>
 </div>
@@ -110,6 +129,8 @@
   var addListRow = document.getElementById('add-list-row');
   var newListInput = document.getElementById('new-list-name');
   var listEl = document.getElementById('items-list');
+  var listNameHeading = document.getElementById('list-name-heading');
+  var progressFill = document.getElementById('progress-fill');
   var summaryEl = document.getElementById('summary');
   var clearBtn = document.getElementById('clear-btn');
   var addForm = document.getElementById('add-form');
@@ -143,9 +164,11 @@
       var l = state.lists[i];
       var active = l.id === activeListId;
       var pending = l.id === pendingDeleteId;
+      var doneN = l.items.filter(function (it) { return it.done; }).length;
       html +=
         '<div class="tab' + (active ? ' active' : '') + '" data-id="' + escapeHtml(l.id) + '">' +
         '<button type="button" class="tab-label" data-id="' + escapeHtml(l.id) + '">' + escapeHtml(l.name) + '</button>' +
+        '<span class="tab-count mono">' + doneN + '/' + l.items.length + '</span>' +
         '<button type="button" class="tab-close' + (pending ? ' pending' : '') + '" data-id="' + escapeHtml(l.id) + '" aria-label="' + (pending ? 'Confirm delete ' : 'Delete ') + escapeHtml(l.name) + '"' + (state.lists.length > 1 ? '' : ' disabled') + '>' + (pending ? '&check;' : '&times;') + '</button>' +
         '</div>';
     }
@@ -162,6 +185,7 @@
   function renderItems() {
     var active = getActiveList();
     var items = active ? active.items : [];
+    listNameHeading.textContent = active ? active.name : 'No list selected';
     if (items.length === 0) {
       listEl.innerHTML = '<li class="empty">Nothing on this list yet.</li>';
     } else {
@@ -178,6 +202,8 @@
       listEl.innerHTML = html;
     }
     var doneCount = items.filter(function (it) { return it.done; }).length;
+    var pct = items.length ? Math.round((doneCount / items.length) * 100) : 0;
+    progressFill.style.width = pct + '%';
     summaryEl.textContent = doneCount + ' of ' + items.length + ' done';
     clearBtn.hidden = doneCount === 0;
   }
