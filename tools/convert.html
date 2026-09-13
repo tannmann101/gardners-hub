@@ -16,7 +16,7 @@
     width: 110px; font-family: 'IBM Plex Mono', monospace; font-size: 1.15rem; padding: 12px 14px;
   }
   select {
-    flex: 1; background: var(--surface-2); border: 1px solid var(--border); border-radius: 7px;
+    flex: 1; min-width: 0; background: var(--surface-2); border: 1px solid var(--border); border-radius: 7px;
     padding: 12px 10px; color: var(--text); font-family: 'Instrument Sans', sans-serif; font-size: 0.92rem;
     cursor: pointer;
   }
@@ -39,6 +39,23 @@
   .ingredient-select { margin-bottom: 18px; }
   .ingredient-select select { width: 100%; }
   .note { color: var(--faint); font-size: 0.82rem; margin-top: 20px; line-height: 1.5; }
+
+  /* Narrow phones: value + 2 unit selects + swap button in one row left
+     selects too squeezed to show their own unit text. Rearrange into a
+     from-row / swap / to-row stack instead, so each select gets real width. */
+  @media (max-width: 480px) {
+    .converter-card { padding: 26px 20px; }
+    .conv-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-areas: "value fromunit" "swap swap" "tounit tounit";
+      gap: 10px;
+    }
+    .conv-row input[type="number"] { grid-area: value; width: auto; }
+    .conv-row #from-unit { grid-area: fromunit; }
+    .conv-row .swap-btn { grid-area: swap; justify-self: center; }
+    .conv-row #to-unit { grid-area: tounit; }
+  }
 </style>
 </head>
 <body>

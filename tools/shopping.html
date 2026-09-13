@@ -98,6 +98,7 @@
       <div class="list-progress">
         <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
         <span class="mono" id="summary">&nbsp;</span>
+        <button type="button" class="clear-btn" id="copy-btn">Copy list</button>
         <button type="button" class="clear-btn" id="clear-btn" hidden>Clear checked</button>
       </div>
 
@@ -133,6 +134,7 @@
   var progressFill = document.getElementById('progress-fill');
   var summaryEl = document.getElementById('summary');
   var clearBtn = document.getElementById('clear-btn');
+  var copyBtn = document.getElementById('copy-btn');
   var addForm = document.getElementById('add-form');
   var newItemInput = document.getElementById('new-item');
   var statusDot = document.getElementById('status-dot');
@@ -277,6 +279,36 @@
         await load();
       } catch (err) { setStatus('error'); }
     }
+  });
+
+  function copyText(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(text);
+    }
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    try { document.execCommand('copy'); } finally { ta.remove(); }
+    return Promise.resolve();
+  }
+
+  copyBtn.addEventListener('click', function () {
+    var active = getActiveList();
+    if (!active) return;
+    var lines = [active.name].concat(active.items.map(function (it) {
+      return (it.done ? '[x] ' : '[ ] ') + it.text;
+    }));
+    copyText(lines.join('\n')).then(function () {
+      copyBtn.textContent = 'Copied!';
+      setTimeout(function () { copyBtn.textContent = 'Copy list'; }, 1500);
+    }).catch(function () {
+      copyBtn.textContent = 'Copy failed';
+      setTimeout(function () { copyBtn.textContent = 'Copy list'; }, 1500);
+    });
   });
 
   clearBtn.addEventListener('click', async function () {

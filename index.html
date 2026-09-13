@@ -65,8 +65,10 @@
 
   .nav-links {
     display: flex;
-    gap: 6px;
+    gap: 2px;
     list-style: none;
+    flex-shrink: 1;
+    min-width: 0;
   }
   .nav-links a {
     display: block;
@@ -76,6 +78,7 @@
     font-weight: 500;
     color: var(--muted);
     text-decoration: none;
+    white-space: nowrap;
     transition: color 0.15s ease, background 0.15s ease;
   }
   .nav-links a:hover, .nav-links a:focus-visible {
@@ -239,6 +242,16 @@
     html { scroll-behavior: auto; }
     .card, .nav-links a { transition: none; }
   }
+
+  /* Narrow phones: wordmark + 3 nav links at desktop spacing don't fit
+     in one row and were forcing horizontal scroll. Tighten padding/gap
+     instead of letting anything wrap. */
+  @media (max-width: 480px) {
+    nav { padding: 0 14px; }
+    .wordmark { font-size: 0.85rem; }
+    .nav-links { gap: 0; }
+    .nav-links a { padding: 8px 8px; font-size: 0.82rem; }
+  }
 </style>
 </head>
 <body>
@@ -266,7 +279,7 @@
   <section id="apps" class="apps">
     <div class="section-head">
       <h2>Apps</h2>
-      <span class="mono">04</span>
+      <span class="mono">02</span>
     </div>
     <div class="grid">
 
@@ -277,22 +290,10 @@
         <p>Budget, bills, and accounts. Synced between us.</p>
       </a>
 
-      <a class="card" href="https://rocshop.thegardners.xyz">
-        <span class="status"><span class="dot"></span><span class="mono">Live</span></span>
-        <h3>Rochelle&rsquo;s Workshop</h3>
-        <p>Projects, ideas, and what&rsquo;s up next.</p>
-      </a>
-
-      <a class="card" href="https://secretary.thegardners.xyz">
-        <span class="status"><span class="dot pending"></span><span class="mono">Live</span></span>
-        <h3>Secretary</h3>
-        <p>Household operations &mdash; plans, schedules, and upkeep.</p>
-      </a>
-
       <a class="card pending" href="#">
         <span class="status"><span class="dot pending"></span><span class="mono">In build</span></span>
-        <h3>Teacher</h3>
-        <p>Learning and teaching at home.</p>
+        <h3>Notebook</h3>
+        <p>Placeholder for what&rsquo;s next.</p>
       </a>
 
     </div>
@@ -310,7 +311,7 @@
   <section id="resources" class="resources">
     <div class="section-head">
       <h2>Resources</h2>
-      <span class="mono">12</span>
+      <span class="mono">10</span>
     </div>
     <!-- Cards below are rendered from resources.js — edit that file, not this markup -->
     <div class="grid"></div>
