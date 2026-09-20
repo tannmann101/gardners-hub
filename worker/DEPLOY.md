@@ -23,8 +23,11 @@ Run these from the `worker/` directory, with Node.js installed locally.
    ```
    npx wrangler d1 create gardners-hub
    ```
-   This prints a `database_id`. Copy it into `wrangler.toml`, replacing
-   `REPLACE_WITH_YOUR_DATABASE_ID`.
+   This prints a `database_id`. The one for the existing database is
+   already committed in `wrangler.toml` — only replace it if you're
+   pointing at a brand-new database. (The id isn't a secret; it does
+   nothing without account credentials. `npx wrangler d1 list` prints it
+   again if you ever need to look it up.)
 
 3. **Apply the schema:**
    ```
