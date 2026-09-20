@@ -8,7 +8,7 @@
 const MAX_LIST_NAME = 40;
 const MAX_ITEM_TEXT = 120;
 const MAX_LABEL = 60;
-const MAX_TIP_TEXT = 200;
+const MAX_TIP_TEXT = 500;
 
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), {

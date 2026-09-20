@@ -25,7 +25,10 @@
     color: var(--accent); margin-bottom: 28px;
     box-shadow: 0 0 40px rgba(138, 180, 216, 0.18);
   }
-  .tip-text { font-size: clamp(1.35rem, 3.2vw, 1.9rem); line-height: 1.5; font-weight: 500; max-width: 34ch; }
+  .tip-text {
+    font-size: clamp(1.35rem, 3.2vw, 1.9rem); line-height: 1.5; font-weight: 500; max-width: 34ch;
+    white-space: pre-wrap;
+  }
   .tip-meta { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 28px; }
   .tip-meta .mono { color: var(--faint); }
   .tip-dots { display: flex; gap: 6px; }
@@ -39,17 +42,14 @@
   .manage-panel h2 { font-size: 1rem; font-weight: 600; margin-bottom: 16px; }
 
   ul.tip-list { list-style: none; display: flex; flex-direction: column; gap: 2px; margin-bottom: 16px; }
-  li.tip-row { display: flex; align-items: center; gap: 10px; padding: 11px 6px; border-radius: 7px; border-bottom: 1px solid var(--border); }
+  li.tip-row { display: flex; align-items: flex-start; gap: 10px; padding: 11px 6px; border-radius: 7px; border-bottom: 1px solid var(--border); }
   li.tip-row:last-child { border-bottom: none; }
   li.tip-row:hover { background: var(--surface-2); }
   .tip-row-text {
-    flex: 1; font-size: 0.95rem; line-height: 1.45; cursor: text; padding: 4px 6px; border-radius: 5px; word-break: break-word;
+    flex: 1; font-size: 0.95rem; line-height: 1.45; cursor: text; padding: 4px 6px; border-radius: 5px;
+    word-break: break-word; white-space: pre-wrap;
   }
   .tip-row-text:hover { background: var(--surface); }
-  .tip-row-edit {
-    flex: 1; background: var(--surface-2); border: 1px solid var(--accent); border-radius: 5px; padding: 4px 6px;
-    color: var(--text); font-family: 'Instrument Sans', sans-serif; font-size: 0.95rem;
-  }
   .tip-row-remove {
     background: transparent; border: none; color: var(--faint); font-family: 'IBM Plex Mono', monospace;
     font-size: 14px; line-height: 1; cursor: pointer; padding: 4px 6px; border-radius: 5px; opacity: 0; flex-shrink: 0;
@@ -57,11 +57,70 @@
   li.tip-row:hover .tip-row-remove, .tip-row-remove:focus-visible { opacity: 1; }
   .tip-row-remove:hover { color: #c98a8a; background: var(--surface); }
   .tip-row-remove:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; opacity: 1; }
+  /* Touch devices have no hover, so the remove button must always be reachable. */
+  @media (hover: none) { .tip-row-remove { opacity: 1; } }
 
   .empty { color: var(--faint); font-size: 0.9rem; padding: 8px 4px 14px; }
 
-  .add-tip-row { display: flex; gap: 8px; }
-  .add-tip-row input[type="text"] { flex: 1; }
+  /* ---- Multi-line tip editor (shared by "add" and inline "edit") ---- */
+  .tip-editor { flex: 1; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  .tip-input {
+    width: 100%;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 10px 12px;
+    color: var(--text);
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 16px; /* keeps iOS Safari from zooming in on focus */
+    line-height: 1.5;
+    resize: none;
+    overflow-y: auto;
+    max-height: 260px;
+    min-width: 0;
+    white-space: pre-wrap;
+  }
+  .tip-input::placeholder { color: var(--faint); }
+  .tip-input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .tip-editor.editing .tip-input { border-color: var(--accent); }
+
+  .editor-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+  .editor-key {
+    background: var(--surface-2); border: 1px solid var(--border); border-radius: 6px;
+    padding: 7px 10px; color: var(--muted); cursor: pointer;
+    font-family: 'IBM Plex Mono', monospace; font-size: 12px; line-height: 1;
+    min-height: 34px; display: inline-flex; align-items: center; gap: 5px;
+  }
+  .editor-key:hover { background: var(--surface); color: var(--text); }
+  .editor-key:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .editor-btn {
+    background: var(--surface-2); border: 1px solid var(--border-strong); border-radius: 6px;
+    padding: 7px 14px; color: var(--text); cursor: pointer;
+    font-family: 'Instrument Sans', sans-serif; font-size: 0.88rem; font-weight: 500;
+    min-height: 34px;
+  }
+  .editor-btn:hover { background: #21262e; }
+  .editor-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .editor-btn.ghost { background: transparent; border-color: var(--border); color: var(--muted); }
+  .editor-btn.ghost:hover { background: var(--surface-2); }
+  .editor-count {
+    margin-left: auto; color: var(--faint);
+    font-family: 'IBM Plex Mono', monospace; font-size: 11px; white-space: nowrap;
+  }
+  .editor-count.warn { color: #c98a8a; }
+  .editor-hint {
+    color: var(--faint); font-family: 'IBM Plex Mono', monospace; font-size: 11px; line-height: 1.5;
+  }
+
+  .add-tip-form { display: flex; flex-direction: column; }
+
+  @media (max-width: 520px) {
+    /* Stack as: format keys, counter, then the commit buttons on their own row. */
+    .editor-count { margin-left: 0; width: 100%; order: 1; }
+    .editor-btn { order: 2; flex: 1; }
+  }
+
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
 </style>
 </head>
 <body>
@@ -98,10 +157,9 @@
   <div class="manage-panel" id="manage-panel" hidden>
     <h2>All tips</h2>
     <ul class="tip-list" id="tip-list"></ul>
-    <form class="add-tip-row" id="add-tip-form">
-      <label for="new-tip-input" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);">Add a tip</label>
-      <input type="text" id="new-tip-input" placeholder="Add a tip&hellip;" maxlength="200" autocomplete="off">
-      <button type="submit" class="primary-btn">Add</button>
+    <form class="add-tip-form" id="add-tip-form">
+      <label class="sr-only" for="new-tip-input">Add a tip</label>
+      <div id="add-tip-slot"></div>
     </form>
   </div>
 </div>
@@ -111,10 +169,16 @@
   'use strict';
 
   var POLL_MS = 8000;
+  var MAX_TIP = 500;
+  // Touch keyboards have no Shift+Enter, so Enter types a new line there and
+  // the tip is saved with the explicit button instead.
+  var TOUCH = !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
+
   var state = { tips: [] };
   var tipIndex = 0;
   var manageOpen = false;
   var editingId = null;
+  var activeEditor = null;
 
   var statusDot = document.getElementById('status-dot');
   var statusText = document.getElementById('status-text');
@@ -126,10 +190,19 @@
   var managePanel = document.getElementById('manage-panel');
   var tipListEl = document.getElementById('tip-list');
   var addTipForm = document.getElementById('add-tip-form');
-  var newTipInput = document.getElementById('new-tip-input');
+  var addTipSlot = document.getElementById('add-tip-slot');
 
   function escapeHtml(s) {
     return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  // Keep line breaks, drop trailing spaces and runs of blank lines.
+  function normalizeText(s) {
+    return String(s)
+      .replace(/\r\n?/g, '\n')
+      .replace(/[ \t]+\n/g, '\n')
+      .replace(/\n{3,}/g, '\n\n')
+      .trim();
   }
 
   function setStatus(mode) {
@@ -138,9 +211,119 @@
     else if (mode === 'error') { statusDot.className = 'dot pending'; statusText.className = 'mono err'; statusText.textContent = 'Sync error — try again'; }
   }
 
+  // Only an open inline editor blocks a re-render — the add box sits outside the
+  // list, so refreshing while it has focus is safe (and keeps a just-added tip
+  // from waiting for the next poll to appear).
   function isTyping() {
-    return editingId !== null || document.activeElement === newTipInput;
+    return editingId !== null;
   }
+
+  // ---------- editor ----------
+
+  function autoGrow(ta) {
+    ta.style.height = 'auto';
+    ta.style.height = Math.min(ta.scrollHeight, 260) + 'px';
+  }
+
+  function insertAtCursor(ta, text) {
+    var start = ta.selectionStart;
+    var end = ta.selectionEnd;
+    var value = ta.value;
+    if (typeof start !== 'number') { start = end = value.length; }
+    if (value.length - (end - start) + text.length > MAX_TIP) return;
+    ta.value = value.slice(0, start) + text + value.slice(end);
+    var caret = start + text.length;
+    ta.focus();
+    try { ta.setSelectionRange(caret, caret); } catch (e) { /* older browsers */ }
+    autoGrow(ta);
+    ta.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+
+  function insertBullet(ta) {
+    var start = typeof ta.selectionStart === 'number' ? ta.selectionStart : ta.value.length;
+    var before = ta.value.slice(0, start);
+    var atLineStart = before.length === 0 || before.charAt(before.length - 1) === '\n';
+    insertAtCursor(ta, (atLineStart ? '' : '\n') + '• ');
+  }
+
+  function buildEditor(opts) {
+    var root = document.createElement('div');
+    root.className = 'tip-editor' + (opts.editing ? ' editing' : '');
+
+    var ta = document.createElement('textarea');
+    ta.className = 'tip-input';
+    ta.rows = opts.rows || 2;
+    ta.maxLength = MAX_TIP;
+    ta.value = opts.value || '';
+    if (opts.id) ta.id = opts.id;
+    if (opts.placeholder) ta.placeholder = opts.placeholder;
+    if (opts.ariaLabel) ta.setAttribute('aria-label', opts.ariaLabel);
+
+    var bar = document.createElement('div');
+    bar.className = 'editor-bar';
+    bar.innerHTML =
+      '<button type="button" class="editor-key" data-act="break" aria-label="Insert a line break">&#9166;&nbsp;Line break</button>' +
+      '<button type="button" class="editor-key" data-act="bullet" aria-label="Start a bullet line">&bull;&nbsp;Bullet</button>' +
+      '<span class="editor-count" data-role="count" aria-hidden="true"></span>' +
+      (opts.onCancel ? '<button type="button" class="editor-btn ghost" data-act="cancel">Cancel</button>' : '') +
+      '<button type="button" class="editor-btn" data-act="submit">' + escapeHtml(opts.submitLabel) + '</button>';
+
+    var hint = document.createElement('p');
+    hint.className = 'editor-hint';
+    hint.textContent = TOUCH
+      ? 'Enter starts a new line · tap ' + opts.submitLabel + ' when you’re done'
+      : 'Enter ' + opts.enterVerb + ' · Shift + Enter for a new line';
+
+    root.appendChild(ta);
+    root.appendChild(bar);
+    root.appendChild(hint);
+
+    var countEl = bar.querySelector('[data-role="count"]');
+    function updateCount() {
+      countEl.textContent = ta.value.length + ' / ' + MAX_TIP;
+      countEl.classList.toggle('warn', ta.value.length > MAX_TIP - 40);
+    }
+
+    ta.addEventListener('input', function () { autoGrow(ta); updateCount(); });
+
+    ta.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && opts.onCancel) { e.preventDefault(); opts.onCancel(); return; }
+      if (e.key !== 'Enter') return;
+      if (e.metaKey || e.ctrlKey) { e.preventDefault(); opts.onSubmit(); return; }
+      // Shift+Enter, and plain Enter on a touch keyboard, insert a new line.
+      if (e.shiftKey || TOUCH) return;
+      e.preventDefault();
+      opts.onSubmit();
+    });
+
+    // Keep the caret (and the mobile keyboard) in place when a bar button is tapped.
+    bar.addEventListener('mousedown', function (e) { if (e.target.closest('button')) e.preventDefault(); });
+    bar.addEventListener('click', function (e) {
+      var btn = e.target.closest('button');
+      if (!btn) return;
+      var act = btn.getAttribute('data-act');
+      if (act === 'break') insertAtCursor(ta, '\n');
+      else if (act === 'bullet') insertBullet(ta);
+      else if (act === 'cancel') opts.onCancel();
+      else if (act === 'submit') opts.onSubmit();
+    });
+
+    updateCount();
+
+    return {
+      root: root,
+      textarea: ta,
+      refresh: function () { autoGrow(ta); updateCount(); },
+      focus: function (selectAll) {
+        ta.focus();
+        if (selectAll) { try { ta.select(); } catch (e) { /* noop */ } }
+        else { try { ta.setSelectionRange(ta.value.length, ta.value.length); } catch (e) { /* noop */ } }
+        autoGrow(ta);
+      }
+    };
+  }
+
+  // ---------- render ----------
 
   function renderTip() {
     if (state.tips.length === 0) {
@@ -203,19 +386,99 @@
     managePanel.hidden = !manageOpen;
     manageToggleBtn.classList.toggle('active', manageOpen);
     manageToggleBtn.textContent = manageOpen ? 'Hide tips' : 'Manage tips';
+    if (manageOpen) addEditor.refresh();
   });
 
-  addTipForm.addEventListener('submit', async function (e) {
-    e.preventDefault();
-    var text = newTipInput.value.trim();
-    if (!text) return;
-    newTipInput.value = '';
+  // ---------- add ----------
+
+  var addEditor = buildEditor({
+    id: 'new-tip-input',
+    placeholder: 'Add a tip…',
+    submitLabel: 'Add',
+    enterVerb: 'adds the tip',
+    rows: 2,
+    onSubmit: function () { submitNewTip(); }
+  });
+  addTipSlot.appendChild(addEditor.root);
+
+  async function submitNewTip() {
+    var text = normalizeText(addEditor.textarea.value);
+    if (!text) { addEditor.focus(); return; }
+    addEditor.textarea.value = '';
+    addEditor.refresh();
     setStatus('syncing');
     try {
-      await fetch('/api/tips', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ text: text }) });
+      var res = await fetch('/api/tips', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ text: text }) });
+      if (!res.ok) { setStatus('error'); return; }
       await load();
     } catch (err) { setStatus('error'); }
+  }
+
+  addTipForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    submitNewTip();
   });
+
+  // ---------- edit ----------
+
+  function findRow(id) {
+    var rows = tipListEl.querySelectorAll('li.tip-row');
+    for (var i = 0; i < rows.length; i++) {
+      if (rows[i].getAttribute('data-id') === id) return rows[i];
+    }
+    return null;
+  }
+
+  function tipById(id) {
+    return state.tips.filter(function (t) { return t.id === id; })[0] || null;
+  }
+
+  function startEdit(id) {
+    if (editingId === id) return;
+    if (editingId !== null) commitEdit(editingId, activeEditor ? activeEditor.textarea.value : '');
+    var current = tipById(id);
+    var li = findRow(id);
+    if (!current || !li) return;
+    var textEl = li.querySelector('.tip-row-text');
+    if (!textEl) return;
+
+    editingId = id;
+    var editor = buildEditor({
+      value: current.text,
+      ariaLabel: 'Edit tip',
+      submitLabel: 'Save',
+      enterVerb: 'saves',
+      editing: true,
+      rows: 3,
+      onSubmit: function () { commitEdit(id, editor.textarea.value); },
+      onCancel: function () { cancelEdit(); }
+    });
+    activeEditor = editor;
+    textEl.replaceWith(editor.root);
+    // Caret at the end rather than select-all: with multi-line tips, a stray tap
+    // or keystroke should never wipe the whole thing.
+    editor.focus();
+  }
+
+  function cancelEdit() {
+    editingId = null;
+    activeEditor = null;
+    renderManageList();
+  }
+
+  async function commitEdit(id, raw) {
+    var current = tipById(id);
+    var val = normalizeText(raw);
+    editingId = null;
+    activeEditor = null;
+    if (!current || !val || val === current.text) { renderManageList(); return; }
+    setStatus('syncing');
+    try {
+      var res = await fetch('/api/tips/' + id, { method: 'PATCH', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ text: val }) });
+      if (!res.ok) { setStatus('error'); return; }
+      await load();
+    } catch (err) { setStatus('error'); }
+  }
 
   tipListEl.addEventListener('click', function (e) {
     var removeBtn = e.target.closest('.tip-row-remove');
@@ -225,52 +488,28 @@
     var id = li.getAttribute('data-id');
     if (removeBtn) {
       setStatus('syncing');
-      fetch('/api/tips/' + id, { method: 'DELETE' }).then(load).catch(function () { setStatus('error'); });
+      fetch('/api/tips/' + id, { method: 'DELETE' }).then(function () { return load(); }).catch(function () { setStatus('error'); });
     } else if (textEl) {
-      startEdit(li, id);
+      startEdit(id);
     }
   });
+
   tipListEl.addEventListener('keydown', function (e) {
     var textEl = e.target.closest('.tip-row-text');
     if (textEl && (e.key === 'Enter' || e.key === ' ')) {
       e.preventDefault();
       var li = e.target.closest('li.tip-row');
-      startEdit(li, li.getAttribute('data-id'));
+      startEdit(li.getAttribute('data-id'));
     }
   });
 
-  function startEdit(li, id) {
-    var current = state.tips.filter(function (t) { return t.id === id; })[0];
-    if (!current) return;
-    editingId = id;
-    var textEl = li.querySelector('.tip-row-text');
-    var input = document.createElement('input');
-    input.type = 'text';
-    input.className = 'tip-row-edit';
-    input.value = current.text;
-    input.maxLength = 200;
-    textEl.replaceWith(input);
-    input.focus();
-    input.select();
-    async function commit() {
-      var val = input.value.trim();
-      editingId = null;
-      if (val && val !== current.text) {
-        setStatus('syncing');
-        try {
-          await fetch('/api/tips/' + id, { method: 'PATCH', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ text: val }) });
-          await load();
-        } catch (err) { setStatus('error'); }
-      } else {
-        renderManageList();
-      }
-    }
-    input.addEventListener('blur', commit);
-    input.addEventListener('keydown', function (ke) {
-      if (ke.key === 'Enter') { ke.preventDefault(); input.blur(); }
-      else if (ke.key === 'Escape') { ke.preventDefault(); editingId = null; renderManageList(); }
-    });
-  }
+  // Tapping or clicking outside an open editor saves it (the editor no longer
+  // commits on blur, so the toolbar buttons can take focus safely).
+  document.addEventListener('pointerdown', function (e) {
+    if (editingId === null || !activeEditor) return;
+    if (activeEditor.root.contains(e.target)) return;
+    commitEdit(editingId, activeEditor.textarea.value);
+  });
 
   tipIndex = Math.floor(Math.random() * 5);
   load(true);
