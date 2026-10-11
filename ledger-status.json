@@ -12,5 +12,79 @@
     { "mode": "Video pass", "last": "2026-10-11", "note": "On request only" },
     { "mode": "X post pass", "last": "2026-10-11", "note": "On request only" }
   ],
-  "nextForumPass": "2026-10-18"
+  "nextForumPass": "2026-10-18",
+  "awaitingPlacement": 1,
+  "categories": [
+    {
+      "name": "theological",
+      "lens": "Monarchical Trinitarian model",
+      "placed": 5,
+      "summary": "Mostly the relationship of Son and Father: dependence as mutual, authority without lesser being, and whether trusting an offered story brings more meaning than self-authoring. Careful movement from the eternal relations toward hypostasis.",
+      "themes": ["Son and Father", "authority and freedom", "hypostasis", "story and meaning"]
+    },
+    {
+      "name": "philosophical",
+      "lens": "",
+      "placed": 4,
+      "summary": "Questions of what grounds a worldview: which materialist positions and what would count as grounding, how terms for the mind are distinguished, and a first reading of Nietzsche.",
+      "themes": ["materialism", "distinctions between terms", "Nietzsche"]
+    },
+    {
+      "name": "political",
+      "lens": "",
+      "placed": 2,
+      "summary": "Monarchy set against the nation-state, and a separate note on the rights of children.",
+      "themes": ["monarchy", "nation-state", "children's rights"]
+    },
+    {
+      "name": "etymological",
+      "lens": "",
+      "placed": 2,
+      "summary": "Attention to what words carry, such as thresholds and crossings and the exact senses of related terms. The origins of \"modern\" and \"secular\" are an open, unchecked question.",
+      "themes": ["word origins", "threshold", "precise senses of terms"]
+    },
+    {
+      "name": "psychological",
+      "lens": "Petersonian",
+      "placed": 2,
+      "summary": "Read through Peterson: a note on children and a lecture introducing Nietzsche.",
+      "themes": ["Peterson", "children", "Nietzsche"]
+    },
+    {
+      "name": "hemispherological",
+      "lens": "McGilchrist",
+      "placed": 3,
+      "summary": "The Master and his Emissary as a frame, including cold, analytical handling of moral and spiritual matters as a left-hemisphere pattern.",
+      "themes": ["master and emissary", "left-brain analysis", "the West"]
+    },
+    {
+      "name": "civilizationological",
+      "lens": "Jordan Hall",
+      "placed": 3,
+      "summary": "Hall's frame taken as reaching beyond any one paradigm, applied to monarchy versus the nation-state and to a wider conversation about where the West is.",
+      "themes": ["paradigm shifts", "monarchy", "nation-state", "the West"]
+    },
+    {
+      "name": "symbological",
+      "lens": "Pageauian",
+      "placed": 2,
+      "summary": "Thresholds and crossings as symbols, and the question of which symbols make monarchy richest.",
+      "themes": ["threshold", "symbols of monarchy"]
+    },
+    {
+      "name": "cognitive",
+      "lens": "Vervaekean",
+      "placed": 3,
+      "summary": "Relevance realization as a starting point, how the pieces of cognition are distinguished, and its place in the wider conversation about the West.",
+      "themes": ["relevance realization", "nous", "distinctions"]
+    },
+    {
+      "name": "techne",
+      "lens": "The garments of skin",
+      "placed": 5,
+      "summary": "Tools and systems as human coverings: what a tool is and whether it extends or replaces the maker's skill, and the household's own digital toolset (the apps and sites they build).",
+      "themes": ["tools and AI", "extending versus outsourcing", "household toolset"]
+    }
+  ],
+  "categoriesNote": "Claude's reading of entries he has placed. Proposals are not included."
 }

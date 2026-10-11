@@ -9,19 +9,32 @@
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link href="/styles.css" rel="stylesheet">
 <style>
-  .status-wrap { width: 100%; max-width: 640px; margin: 0 auto; padding: 32px 20px 72px; }
+  .status-wrap { width: 100%; max-width: 760px; margin: 0 auto; padding: 32px 20px 72px; }
   .stat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 28px; }
   .stat { padding: 18px 18px 16px; }
   .stat .num { font-family: 'IBM Plex Mono', monospace; font-size: 2rem; color: var(--accent); font-variant-numeric: tabular-nums; }
   .stat .lbl { color: var(--muted); font-size: 0.88rem; margin-top: 4px; }
   .stat.attention .num { color: var(--text); }
   h2.sec { font-size: 1.05rem; font-weight: 600; margin: 8px 0 12px; }
-  .pass-list { list-style: none; padding: 0; margin: 0 0 24px; }
+  .sec-note { color: var(--faint); font-size: 0.82rem; line-height: 1.5; margin: -4px 0 14px; }
+  .pass-list { list-style: none; padding: 0; margin: 0 0 28px; }
   .pass-list li { display: flex; justify-content: space-between; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 0.92rem; }
   .pass-list .when { color: var(--faint); font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; white-space: nowrap; }
   .pass-list .what { color: var(--muted); }
+  .cat-list { display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 28px; }
+  .cat { padding: 18px 18px 16px; display: flex; flex-direction: column; gap: 8px; }
+  .cat-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  .cat-name { font-weight: 600; font-size: 1.02rem; }
+  .cat-count { font-family: 'IBM Plex Mono', monospace; color: var(--accent); font-size: 0.95rem; white-space: nowrap; }
+  .cat-lens { color: var(--faint); font-size: 0.8rem; font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.04em; }
+  .cat-sum { color: var(--muted); font-size: 0.92rem; line-height: 1.5; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; }
+  .chip { font-size: 0.78rem; color: var(--muted); background: var(--surface-2); border: 1px solid var(--border); border-radius: 999px; padding: 3px 10px; }
+  .bar { height: 4px; border-radius: 2px; background: var(--surface-2); overflow: hidden; margin-top: 2px; }
+  .bar > span { display: block; height: 100%; background: var(--accent); }
   .foot { color: var(--faint); font-size: 0.82rem; line-height: 1.5; }
   #err { color: var(--muted); }
+  @media (min-width: 700px) { .cat-list { grid-template-columns: 1fr 1fr; } }
 </style>
 </head>
 <body>
@@ -40,6 +53,12 @@
         <div class="card stat"><div class="num" id="queue">&mdash;</div><div class="lbl">In the queue</div></div>
         <div class="card stat"><div class="num" id="entries">&mdash;</div><div class="lbl">Notebook entries</div></div>
         <div class="card stat"><div class="num" id="forum">&mdash;</div><div class="lbl">Forum threads</div></div>
+      </div>
+
+      <div id="cats-block" hidden>
+        <h2 class="sec">What&rsquo;s running in the notes</h2>
+        <p class="sec-note" id="cats-note"></p>
+        <div class="cat-list" id="cats"></div>
       </div>
 
       <h2 class="sec">Last passes</h2>
@@ -61,6 +80,12 @@
     return parseInt(p[2], 10) + ' ' + m + ' ' + p[0];
   }
   function set(id, v) { document.getElementById(id).textContent = String(v); }
+  function el(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text !== undefined && text !== null) e.textContent = text;
+    return e;
+  }
 
   fetch('/ledger-status.json', { cache: 'no-cache' })
     .then(function (r) { if (!r.ok) throw new Error('bad'); return r.json(); })
@@ -69,6 +94,38 @@
       set('queue', s.queue);
       set('entries', s.entries);
       set('forum', s.forum && s.forum.threads);
+
+      var cats = s.categories || [];
+      if (cats.length) {
+        var max = 1;
+        cats.forEach(function (c) { if (c.placed > max) max = c.placed; });
+        var wrap = document.getElementById('cats');
+        cats.forEach(function (c) {
+          var card = el('div', 'card cat');
+          var head = el('div', 'cat-head');
+          head.appendChild(el('span', 'cat-name', c.name));
+          head.appendChild(el('span', 'cat-count', String(c.placed) + (c.placed === 1 ? ' entry' : ' entries')));
+          card.appendChild(head);
+          if (c.lens) card.appendChild(el('div', 'cat-lens', c.lens));
+          var bar = el('div', 'bar');
+          var fill = el('span');
+          fill.style.width = Math.round((c.placed / max) * 100) + '%';
+          bar.appendChild(fill);
+          card.appendChild(bar);
+          if (c.summary) card.appendChild(el('p', 'cat-sum', c.summary));
+          if (c.themes && c.themes.length) {
+            var chips = el('div', 'chips');
+            c.themes.forEach(function (t) { chips.appendChild(el('span', 'chip', t)); });
+            card.appendChild(chips);
+          }
+          wrap.appendChild(card);
+        });
+        var note = (s.categoriesNote || '') ;
+        if (s.awaitingPlacement) note += (note ? ' ' : '') + s.awaitingPlacement + (s.awaitingPlacement === 1 ? ' entry is' : ' entries are') + ' awaiting placement.';
+        note += (note ? ' ' : '') + 'An entry can sit under more than one category.';
+        set('cats-note', note);
+        document.getElementById('cats-block').hidden = false;
+      }
 
       var ul = document.getElementById('passes');
       (s.passes || []).forEach(function (p) {
@@ -91,7 +148,7 @@
 
       var foot = 'Updated ' + fmt(s.updated) + '.';
       if (s.nextForumPass) foot += ' Next weekly forum pass ' + fmt(s.nextForumPass) + '.';
-      foot += ' Counts and dates only; nothing from the notes is shown here.';
+      foot += ' Category summaries are Claude’s readings in general terms; his own words stay in the Ledger.';
       set('foot', foot);
       document.getElementById('content').hidden = false;
     })
