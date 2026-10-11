@@ -14,3 +14,6 @@ routes = [
 binding = "DB"
 database_name = "gardners-hub"
 database_id = "ab6ca0f4-0352-4fbd-84a5-473db12f28da"
+
+# Required by `wrangler preview` (branch preview builds). Can stay empty.
+[previews]
