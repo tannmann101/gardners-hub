@@ -7,4 +7,5 @@ const TOOLS = [
   { label: 'Next Up', description: "Countdown to whatever's next, with more than one on deck.", url: '/tools/next-up.html' },
   { label: 'Convert Anything', description: 'Volume, weight, length, temp — plus cooking-ingredient conversions.', url: '/tools/convert.html' },
   { label: 'House Tips', description: 'Rotating reminders anyone can add to or edit.', url: '/tools/tips.html' },
+  { label: 'Ledger Status', description: 'Where the Notebook Ledger stands: what is waiting, what ran last.', url: '/tools/ledger-status.html' },
 ];

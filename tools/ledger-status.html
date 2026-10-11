@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ledger Status — The Gardners</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="/styles.css" rel="stylesheet">
+<style>
+  .status-wrap { width: 100%; max-width: 640px; margin: 0 auto; padding: 32px 20px 72px; }
+  .stat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 28px; }
+  .stat { padding: 18px 18px 16px; }
+  .stat .num { font-family: 'IBM Plex Mono', monospace; font-size: 2rem; color: var(--accent); font-variant-numeric: tabular-nums; }
+  .stat .lbl { color: var(--muted); font-size: 0.88rem; margin-top: 4px; }
+  .stat.attention .num { color: var(--text); }
+  h2.sec { font-size: 1.05rem; font-weight: 600; margin: 8px 0 12px; }
+  .pass-list { list-style: none; padding: 0; margin: 0 0 24px; }
+  .pass-list li { display: flex; justify-content: space-between; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 0.92rem; }
+  .pass-list .when { color: var(--faint); font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; white-space: nowrap; }
+  .pass-list .what { color: var(--muted); }
+  .foot { color: var(--faint); font-size: 0.82rem; line-height: 1.5; }
+  #err { color: var(--muted); }
+</style>
+</head>
+<body>
+
+<nav class="app-nav">
+  <a class="app-back mono" href="/#tools">&larr; Home</a>
+  <span class="app-title">Ledger Status</span>
+</nav>
+
+<div class="app-main">
+  <div class="status-wrap">
+    <p id="err" hidden>Status isn&rsquo;t available right now.</p>
+    <div id="content" hidden>
+      <div class="stat-grid">
+        <div class="card stat attention"><div class="num" id="waiting">&mdash;</div><div class="lbl">Waiting on Tanner</div></div>
+        <div class="card stat"><div class="num" id="queue">&mdash;</div><div class="lbl">In the queue</div></div>
+        <div class="card stat"><div class="num" id="entries">&mdash;</div><div class="lbl">Notebook entries</div></div>
+        <div class="card stat"><div class="num" id="forum">&mdash;</div><div class="lbl">Forum threads</div></div>
+      </div>
+
+      <h2 class="sec">Last passes</h2>
+      <ul class="pass-list" id="passes"></ul>
+
+      <p class="foot" id="foot"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  function fmt(d) {
+    if (!d) return '';
+    var p = d.split('-');
+    if (p.length !== 3) return d;
+    var m = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][parseInt(p[1], 10) - 1];
+    return parseInt(p[2], 10) + ' ' + m + ' ' + p[0];
+  }
+  function set(id, v) { document.getElementById(id).textContent = String(v); }
+
+  fetch('/ledger-status.json', { cache: 'no-cache' })
+    .then(function (r) { if (!r.ok) throw new Error('bad'); return r.json(); })
+    .then(function (s) {
+      set('waiting', s.waiting);
+      set('queue', s.queue);
+      set('entries', s.entries);
+      set('forum', s.forum && s.forum.threads);
+
+      var ul = document.getElementById('passes');
+      (s.passes || []).forEach(function (p) {
+        var li = document.createElement('li');
+        var left = document.createElement('span');
+        var name = document.createElement('span');
+        name.textContent = p.mode;
+        var what = document.createElement('span');
+        what.className = 'what';
+        what.textContent = p.note ? ' — ' + p.note : '';
+        left.appendChild(name);
+        left.appendChild(what);
+        var when = document.createElement('span');
+        when.className = 'when';
+        when.textContent = fmt(p.last);
+        li.appendChild(left);
+        li.appendChild(when);
+        ul.appendChild(li);
+      });
+
+      var foot = 'Updated ' + fmt(s.updated) + '.';
+      if (s.nextForumPass) foot += ' Next weekly forum pass ' + fmt(s.nextForumPass) + '.';
+      foot += ' Counts and dates only; nothing from the notes is shown here.';
+      set('foot', foot);
+      document.getElementById('content').hidden = false;
+    })
+    .catch(function () { document.getElementById('err').hidden = false; });
+})();
+</script>
+</body>
+</html>
