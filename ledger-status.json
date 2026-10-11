@@ -1,0 +1,16 @@
+{
+  "updated": "2026-10-11",
+  "waiting": 4,
+  "queue": 4,
+  "entries": 19,
+  "forum": { "threads": 10, "items": 26 },
+  "videos": { "summarized": 8, "linked": 12 },
+  "xPosts": 5,
+  "passes": [
+    { "mode": "Notebook assessment", "last": "2026-10-11", "note": "Pass 1 done; placements waiting" },
+    { "mode": "Forum pass", "last": "2026-10-11", "note": "Nothing new" },
+    { "mode": "Video pass", "last": "2026-10-11", "note": "On request only" },
+    { "mode": "X post pass", "last": "2026-10-11", "note": "On request only" }
+  ],
+  "nextForumPass": "2026-10-18"
+}
