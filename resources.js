@@ -1,9 +1,9 @@
 // Edit this file to add, remove, or reorder Resources cards on the site.
 // Each entry needs `label` (card title) and `url` (destination link, opened
 // in a new tab). `description` is optional and renders as the subtitle line.
-// That version bump is the only other change needed for a link update.
 // After editing, bump the ?v= number on the resources.js <script> tag in
 // index.html so browsers and the Cloudflare cache pick up the new version.
+// That version bump is the only other change needed for a link update.
 const RESOURCES = [
   { label: 'Website Build', description: 'Claude project', url: 'https://claude.ai/cowork/project/01a03b50-4e21-7301-9cc1-94ac311288f7' },
   { label: 'Research Notes', description: 'Claude project', url: 'https://claude.ai/project/01a093e8-74f6-77ac-8af2-cdcaeacb0feb' },
