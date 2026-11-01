@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Private: personal and family material. Keep out of search engines and archives. -->
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+<meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet">
+<meta name="referrer" content="no-referrer">
+<meta name="color-scheme" content="dark">
+<title>Notes Workspace — The Gardners</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+<link href="/styles.css" rel="stylesheet">
+<link href="/notes/notes.css?v=20261101" rel="stylesheet">
+</head>
+<body>
+
+<nav class="app-nav">
+  <a class="app-back mono" href="/">&larr; Home</a>
+  <span class="app-title">Notes Workspace</span>
+</nav>
+
+<main class="nw-main" id="workspace">
+  <header class="nw-head">
+    <p class="mono eyebrow">Gallery of works</p>
+    <h1 class="nw-title">Notes Workspace</h1>
+    <div class="nw-sub" id="intro"></div>
+  </header>
+  <ol class="works" id="works" aria-label="Works"></ol>
+  <p class="load-err" id="err" hidden>The works list couldn&rsquo;t be loaded right now.</p>
+</main>
+
+<script>
+(function () {
+  'use strict';
+  function el(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text !== undefined && text !== null) e.textContent = text;
+    return e;
+  }
+  function fmt(d) {
+    var p = String(d || '').split('-');
+    if (p.length !== 3) return d;
+    return parseInt(p[2], 10) + ' ' + ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][parseInt(p[1], 10) - 1] + ' ' + p[0];
+  }
+  function unsorted() { return el('span', 'unsorted', 'not yet sorted'); }
+  var list = document.getElementById('works');
+
+  fetch('/notes/works.json', { cache: 'no-cache' })
+    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function (reg) {
+      var intro = document.getElementById('intro');
+      (Array.isArray(reg.intro) ? reg.intro : [reg.intro]).forEach(function (t) { if (t) intro.appendChild(el('p', null, t)); });
+      return Promise.all((reg.works || []).map(function (w) {
+        return fetch(w.data, { cache: 'no-cache' })
+          .then(function (r) { return r.ok ? r.json() : {}; })
+          .catch(function () { return {}; })
+          .then(function (d) { return { w: w, d: d }; });
+      }));
+    })
+    .then(function (rows) {
+      rows.forEach(function (row, i) {
+        var w = row.w, d = row.d;
+        var li = el('li', 'work');
+        li.appendChild(el('span', 'mono', 'Work ' + String(i + 1).padStart(2, '0') + (w.form ? ' · ' + w.form : '')));
+        var h = el('h2');
+        var a = el('a', null, d.title || w.slug);
+        a.href = w.href;
+        h.appendChild(a);
+        li.appendChild(h);
+        if (d.subtitle) li.appendChild(el('p', null, d.subtitle));
+        var rev = el('p', 'rev');
+        rev.appendChild(el('span', 'mono', 'Last revised '));
+        if (d.lastRevised) { var t = el('time', null, fmt(d.lastRevised)); t.dateTime = d.lastRevised; rev.appendChild(t); } else rev.appendChild(unsorted());
+        li.appendChild(rev);
+        var note = el('p', 'rev');
+        note.appendChild(el('span', 'mono', 'Revision note '));
+        if (d.revisionNote) note.appendChild(document.createTextNode(d.revisionNote)); else note.appendChild(unsorted());
+        li.appendChild(note);
+        list.appendChild(li);
+      });
+    })
+    .catch(function () { document.getElementById('err').hidden = false; });
+})();
+</script>
+</body>
+</html>

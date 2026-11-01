@@ -1,0 +1,7 @@
+# Cloudflare Pages response headers (ignored by GitHub Pages).
+# Real HTTP noindex for the private Notes Workspace, on top of the
+# <meta name="robots"> tags in each page, so it also covers the JSON data.
+/notes/*
+  X-Robots-Tag: noindex, nofollow, noarchive, nosnippet
+  Referrer-Policy: no-referrer
+  Cache-Control: no-cache
