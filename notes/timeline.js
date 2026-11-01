@@ -18,7 +18,10 @@
   };
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  var X = window.NotesExport;
+  var dataPath = root.getAttribute('data-src');
   var data, byId = {}, bySlug = {}, cards = [], carries = [], eraSections = [];
+  var views = {}, viewBtns = {}, currentView = 'entries', toastEl;
   var state = { kind: 'all', status: 'all', test: 'any', met: true };
 
   /* ---------- small helpers ---------- */
@@ -78,6 +81,112 @@
     var r = refLinks(obj.refs);
     if (r) { e.appendChild(document.createTextNode(' ')); e.appendChild(r); }
     return e;
+  }
+
+  /* ---------- copy / download actions ---------- */
+  function toast(msg) {
+    if (!toastEl) return;
+    toastEl.textContent = '';
+    setTimeout(function () { toastEl.textContent = msg; }, 30);
+  }
+  function actionBtn(label, getText) {
+    var b = el('button', 'ghost-btn small', label);
+    b.type = 'button';
+    b.addEventListener('click', function () {
+      X.copyText(getText()).then(function () { toast('Copied to clipboard.'); },
+        function () { toast('Couldn\u2019t copy. Try Download instead.'); });
+    });
+    return b;
+  }
+  function fileBase() { return dataPath.replace(/\/data\.json$/, '').split('/').pop() || 'work'; }
+  function renderToolbar() {
+    var bar = el('div', 'nw-tools');
+    bar.setAttribute('role', 'group');
+    bar.setAttribute('aria-label', 'Take this work elsewhere');
+    bar.appendChild(actionBtn('Copy as Markdown', function () { return X.workMd(data); }));
+    var md = el('button', 'ghost-btn small', 'Download .md'); md.type = 'button';
+    md.addEventListener('click', function () { X.download(fileBase() + '-' + (data.lastRevised || 'undated') + '.md', X.workMd(data), 'text/markdown'); });
+    bar.appendChild(md);
+    var js = el('button', 'ghost-btn small', 'Download data'); js.type = 'button';
+    js.addEventListener('click', function () { X.download(fileBase() + '-' + (data.lastRevised || 'undated') + '.json', JSON.stringify(data, null, 2), 'application/json'); });
+    bar.appendChild(js);
+    var pr = el('button', 'ghost-btn small', 'Print or PDF'); pr.type = 'button';
+    pr.addEventListener('click', function () { window.print(); });
+    bar.appendChild(pr);
+    toastEl = el('p', 'nw-toast');
+    toastEl.setAttribute('role', 'status');
+    toastEl.setAttribute('aria-live', 'polite');
+    var wrap = el('div');
+    wrap.appendChild(bar);
+    wrap.appendChild(toastEl);
+    return wrap;
+  }
+
+  /* ---------- views: Entries / Chart / Gaps ---------- */
+  function renderViewSwitch() {
+    var nav = el('div', 'nw-views');
+    nav.setAttribute('role', 'group');
+    nav.setAttribute('aria-label', 'View');
+    [['entries', 'Entries'], ['chart', 'Chart'], ['gaps', 'Gaps']].forEach(function (v) {
+      var b = el('button', 'nw-view', v[1]);
+      b.type = 'button';
+      b.setAttribute('aria-pressed', v[0] === currentView ? 'true' : 'false');
+      b.addEventListener('click', function () { showView(v[0], true); });
+      viewBtns[v[0]] = b;
+      nav.appendChild(b);
+    });
+    return nav;
+  }
+  function showView(name, updateHash) {
+    if (!views[name]) return;
+    currentView = name;
+    Object.keys(views).forEach(function (k) {
+      views[k].hidden = k !== name;
+      viewBtns[k].setAttribute('aria-pressed', k === name ? 'true' : 'false');
+    });
+    if (name === 'chart' && !views.chart.childNodes.length) window.NotesChart.render(data, views.chart);
+    if (name === 'gaps' && !views.gaps.childNodes.length) renderGaps(views.gaps);
+    if (updateHash && history.replaceState) {
+      history.replaceState(null, '', name === 'entries' ? location.pathname + location.search : '#view=' + name);
+    }
+  }
+
+  function renderGaps(box) {
+    var items = X.allItems(data);
+    var rows = items.map(function (p) { return { p: p, g: X.gaps(p) }; });
+    var counts = {};
+    rows.forEach(function (r) { r.g.forEach(function (x) { if (!x.minor) counts[x.field] = (counts[x.field] || 0) + 1; }); });
+    var head = el('div', 'group-head');
+    head.appendChild(el('h2', null, 'Gaps'));
+    head.appendChild(el('p', null, 'What each entry is still missing, phrased as interview questions. Copy a prompt into a chat with Claude, answer in your own words, and the answers go back into the data.'));
+    box.appendChild(head);
+    var names = { dates: 'dates', period: 'period', placement: 'placement', status: 'status', salvific: 'salvific or worldly', reason: 'ratio or Logos', boundary: 'boundary', open: 'open questions' };
+    var sum = el('div', 'chips gap-sum');
+    Object.keys(names).forEach(function (k) { if (counts[k]) sum.appendChild(chip(String(counts[k]), 'ns', names[k])); });
+    box.appendChild(sum);
+    var all = el('div', 'pc-actions');
+    all.appendChild(actionBtn('Copy interview prompt for every gap', function () {
+      return X.interviewPrompt(data, rows.filter(function (r) { return r.g.length; }).map(function (r) { return r.p; }), { dataPath: dataPath, withEntries: false });
+    }));
+    box.appendChild(all);
+    var ol = el('ol', 'gap-list');
+    rows.forEach(function (r) {
+      if (!r.g.length) return;
+      var li = el('li', 'gap-item');
+      var h = el('h3', 'gap-title');
+      var a = el('a', null, numLabel(r.p) + ' \u00b7 ' + r.p.title);
+      a.href = '#' + r.p.slug;
+      h.appendChild(a);
+      li.appendChild(h);
+      var ul = el('ul', 'plain-list');
+      r.g.forEach(function (x) { ul.appendChild(el('li', x.minor ? 'minor' : null, x.prompt)); });
+      li.appendChild(ul);
+      var act = el('div', 'pc-actions');
+      act.appendChild(actionBtn('Copy interview prompt', function () { return X.interviewPrompt(data, [r.p], { dataPath: dataPath }); }));
+      li.appendChild(act);
+      ol.appendChild(li);
+    });
+    box.appendChild(ol);
   }
 
   /* ---------- header + folds ---------- */
@@ -315,6 +424,8 @@
     var kv = el('span', 'kv-val', LABEL.kind[item.kind] || item.kind);
     kindRow.appendChild(kvRow('Kind', kv, item.kindNote));
     kindRow.appendChild(kvRow('Period', has(item.period) ? el('span', null, item.period) : unsorted(), null, null, item.placementUncertain ? 'placement uncertain' : null));
+    var span = X.fmtSpan(item);
+    kindRow.appendChild(kvRow('Dates', span ? el('span', null, span) : unsorted()));
     var st = item.status || {};
     kindRow.appendChild(kvRow('Status', has(st.value) ? el('span', 'kv-val', LABEL.status[st.value] || st.value) : unsorted(), st.note));
     full.appendChild(sec('Status', kindRow));
@@ -363,9 +474,13 @@
     var oq = item.openQuestions || [];
     full.appendChild(sec('Open questions', oq.length ? list(oq, function (x) { return el('li', null, x); }) : unsorted()));
 
-    var close = el('button', 'ghost-btn pc-close', 'Close');
+    var actions = el('div', 'pc-actions');
+    var close = el('button', 'ghost-btn', 'Close');
     close.type = 'button';
-    full.appendChild(close);
+    actions.appendChild(close);
+    actions.appendChild(actionBtn('Copy entry', function () { return X.itemMd(data, item, 2); }));
+    actions.appendChild(actionBtn('Copy interview prompt', function () { return X.interviewPrompt(data, [item], { dataPath: dataPath }); }));
+    full.appendChild(actions);
     return { node: full, close: close };
   }
 
@@ -391,6 +506,8 @@
     var per = el('p', 'pc-period');
     if (has(item.period)) per.textContent = item.period; else { per.appendChild(document.createTextNode('Period ')); per.appendChild(unsorted()); }
     sum.appendChild(per);
+    var span = X.fmtSpan(item);
+    if (span) sum.appendChild(el('p', 'pc-dates mono', span));
     sum.appendChild(testChips(item));
     art.appendChild(sum);
     var fv = fullView(item, fullId);
@@ -553,12 +670,43 @@
     return g;
   }
 
+  function renderLog(key, title, items, map) {
+    if (!items || !items.length) return null;
+    var g = el('section', 'group');
+    g.setAttribute('aria-labelledby', 'l-' + key);
+    var head = el('div', 'group-head');
+    var h = el('h2', null, title); h.id = 'l-' + key;
+    head.appendChild(h);
+    g.appendChild(head);
+    var ol = el('ol', 'plain-list log-list');
+    items.forEach(function (x) { ol.appendChild(map(x)); });
+    g.appendChild(ol);
+    return g;
+  }
+
+  /* ---------- print: expand everything, then restore ---------- */
+  var printState = null;
+  window.addEventListener('beforeprint', function () {
+    printState = { view: currentView, open: cards.filter(function (c) { return !c.full.hidden; }) };
+    if (currentView !== 'entries') showView('entries', false);
+    cards.forEach(function (c) { setOpen(c, true, false); });
+  });
+  window.addEventListener('afterprint', function () {
+    if (!printState) return;
+    cards.forEach(function (c) { setOpen(c, printState.open.indexOf(c) > -1, false); });
+    if (printState.view !== 'entries') showView(printState.view, false);
+    printState = null;
+  });
+
   /* ---------- routing (slug anchors) ---------- */
   function openFromHash(scroll) {
     var slug = decodeURIComponent((location.hash || '').slice(1));
     if (!slug) return;
+    var vm = slug.match(/^view=(\w+)$/);
+    if (vm) { showView(vm[1], false); return; }
     var c = bySlug[slug];
     if (!c) return;
+    if (currentView !== 'entries') showView('entries', false);
     if (c.li.hidden) resetFilters();
     setOpen(c, true, false);
     if (scroll) {
@@ -587,6 +735,16 @@
       (d.paradigms || []).concat(d.tracks || [], d.met || []).forEach(function (p) { byId[p.id] = p; });
       root.innerHTML = '';
       root.appendChild(renderHead());
+      root.appendChild(renderToolbar());
+      root.appendChild(renderViewSwitch());
+      var entries = el('div', 'nw-view-panel');
+      views.entries = entries;
+      views.chart = el('div', 'nw-view-panel');
+      views.gaps = el('div', 'nw-view-panel');
+      views.chart.hidden = true;
+      views.gaps.hidden = true;
+      var mount = root;
+      root = entries;
       var folds = el('div');
       [renderDefinition(), renderLegend(), renderFilters()].forEach(function (n) { if (n) folds.appendChild(n); });
       root.appendChild(folds);
@@ -599,6 +757,18 @@
        renderGroup('met', 'Met along the way', 'Other people’s paradigms I stood next to.', d.met, true),
        renderNotes('shifts', 'Shifts noticed', d.shiftsNoticed),
        renderNotes('open', 'Open', d.openItems)].forEach(function (n) { if (n) root.appendChild(n); });
+      [renderLog('interviews', 'Interviews', d.interviews, function (x) {
+         var li = el('li'); li.appendChild(document.createTextNode(X.isoDate(x.date) + ': ' + (x.summary || '')));
+         var r = refLinks(x.entries); if (r) { li.appendChild(document.createTextNode(' ')); li.appendChild(r); }
+         return li; }),
+       renderLog('revisions', 'Revision history', d.revisions, function (x) {
+         var li = el('li'); li.appendChild(document.createTextNode(X.isoDate(x.date) + ': '));
+         li.appendChild(has(x.note) ? document.createTextNode(x.note) : unsorted()); return li; })
+      ].forEach(function (n) { if (n) root.appendChild(n); });
+      root = mount;
+      root.appendChild(entries);
+      root.appendChild(views.chart);
+      root.appendChild(views.gaps);
       var foot = el('p', 'nw-foot');
       foot.textContent = 'A still image of current understanding, last revised ' + (fmtDate(d.lastRevised) || NS) + '.';
       root.appendChild(foot);

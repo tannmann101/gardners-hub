@@ -4,6 +4,9 @@
   "subtitle": "The frameworks I reasoned from or lived under, in order, as best I can place them.",
   "lastRevised": "2026-11-01",
   "revisionNote": null,
+  "birthYear": null,
+  "revisions": [],
+  "interviews": [],
   "definition": {
     "heading": "Working definition",
     "paragraphs": [
@@ -114,7 +117,11 @@
       "livingDefinition": "",
       "openQuestions": [
         "Salvific or worldly, and ratio or Logos."
-      ]
+      ],
+      "dates": {
+        "start": null,
+        "end": null
+      }
     },
     {
       "id": "2",
@@ -160,7 +167,11 @@
         "out": []
       },
       "livingDefinition": "",
-      "openQuestions": []
+      "openQuestions": [],
+      "dates": {
+        "start": null,
+        "end": null
+      }
     },
     {
       "id": "3",
@@ -216,7 +227,11 @@
       "livingDefinition": "",
       "openQuestions": [
         "Salvific or worldly, and ratio or Logos."
-      ]
+      ],
+      "dates": {
+        "start": null,
+        "end": null
+      }
     },
     {
       "id": "4",
@@ -272,7 +287,11 @@
       "livingDefinition": "",
       "openQuestions": [
         "Salvific or worldly, and ratio or Logos."
-      ]
+      ],
+      "dates": {
+        "start": null,
+        "end": null
+      }
     },
     {
       "id": "5",
@@ -319,7 +338,11 @@
         "out": []
       },
       "livingDefinition": "",
-      "openQuestions": []
+      "openQuestions": [],
+      "dates": {
+        "start": null,
+        "end": null
+      }
     },
     {
       "id": "6",
@@ -365,7 +388,16 @@
       "livingDefinition": "",
       "openQuestions": [
         "Ratio or Logos."
-      ]
+      ],
+      "dates": {
+        "start": {
+          "age": 8,
+          "ageTo": 9,
+          "approx": true,
+          "text": "around age 8-9"
+        },
+        "end": null
+      }
     },
     {
       "id": "7",
@@ -414,7 +446,11 @@
       "openQuestions": [
         "Asking why and how prayer would be helpful often offends people, as though the answer were obvious. It isn't obvious to me. Open question.",
         "Ratio or Logos."
-      ]
+      ],
+      "dates": {
+        "start": null,
+        "end": null
+      }
     },
     {
       "id": "8",
@@ -461,7 +497,11 @@
         "out": []
       },
       "livingDefinition": "",
-      "openQuestions": []
+      "openQuestions": [],
+      "dates": {
+        "start": null,
+        "end": null
+      }
     },
     {
       "id": "9",
@@ -507,7 +547,11 @@
       "livingDefinition": "",
       "openQuestions": [
         "Ratio or Logos."
-      ]
+      ],
+      "dates": {
+        "start": null,
+        "end": null
+      }
     },
     {
       "id": "10",
@@ -554,7 +598,11 @@
       "livingDefinition": "",
       "openQuestions": [
         "Boundary test."
-      ]
+      ],
+      "dates": {
+        "start": null,
+        "end": null
+      }
     },
     {
       "id": "11",
@@ -600,7 +648,11 @@
       "openQuestions": [
         "Placement: where entry 11 sits against the church years in entry 8.",
         "Boundary test."
-      ]
+      ],
+      "dates": {
+        "start": null,
+        "end": null
+      }
     },
     {
       "id": "12",
@@ -645,7 +697,11 @@
       "livingDefinition": "",
       "openQuestions": [
         "Boundary test."
-      ]
+      ],
+      "dates": {
+        "start": null,
+        "end": null
+      }
     },
     {
       "id": "13",
@@ -690,7 +746,11 @@
       "livingDefinition": "",
       "openQuestions": [
         "Boundary test."
-      ]
+      ],
+      "dates": {
+        "start": null,
+        "end": null
+      }
     },
     {
       "id": "14",
@@ -737,7 +797,11 @@
       "livingDefinition": "",
       "openQuestions": [
         "Boundary test."
-      ]
+      ],
+      "dates": {
+        "start": null,
+        "end": null
+      }
     },
     {
       "id": "15",
@@ -783,7 +847,11 @@
       "openQuestions": [
         "Placement: where entry 15 falls relative to entry 14.",
         "Boundary test."
-      ]
+      ],
+      "dates": {
+        "start": null,
+        "end": null
+      }
     },
     {
       "id": "16",
@@ -828,7 +896,11 @@
       "livingDefinition": "",
       "openQuestions": [
         "Boundary test."
-      ]
+      ],
+      "dates": {
+        "start": null,
+        "end": null
+      }
     },
     {
       "id": "17",
@@ -873,7 +945,11 @@
       "livingDefinition": "",
       "openQuestions": [
         "Boundary test."
-      ]
+      ],
+      "dates": {
+        "start": null,
+        "end": null
+      }
     },
     {
       "id": "18",
@@ -925,7 +1001,11 @@
       "livingDefinition": "",
       "openQuestions": [
         "Boundary test."
-      ]
+      ],
+      "dates": {
+        "start": null,
+        "end": null
+      }
     },
     {
       "id": "19",
@@ -970,7 +1050,11 @@
       "livingDefinition": "",
       "openQuestions": [
         "Boundary test."
-      ]
+      ],
+      "dates": {
+        "start": null,
+        "end": null
+      }
     },
     {
       "id": "20",
@@ -1016,7 +1100,11 @@
       "openQuestions": [
         "Placement: when my marriage began relative to entry 19.",
         "Boundary test."
-      ]
+      ],
+      "dates": {
+        "start": null,
+        "end": null
+      }
     },
     {
       "id": "21",
@@ -1061,7 +1149,11 @@
       "livingDefinition": "",
       "openQuestions": [
         "Boundary test."
-      ]
+      ],
+      "dates": {
+        "start": null,
+        "end": null
+      }
     },
     {
       "id": "22",
@@ -1115,7 +1207,11 @@
       "openQuestions": [
         "Confirm Logos.",
         "Boundary test."
-      ]
+      ],
+      "dates": {
+        "start": null,
+        "end": null
+      }
     },
     {
       "id": "23",
@@ -1160,7 +1256,11 @@
       "livingDefinition": "",
       "openQuestions": [
         "Boundary test."
-      ]
+      ],
+      "dates": {
+        "start": null,
+        "end": null
+      }
     },
     {
       "id": "24",
@@ -1225,7 +1325,11 @@
       "openQuestions": [
         "What \"proper\" participation looks like, and where my parents' family fell short of it (answer pending).",
         "Boundary test."
-      ]
+      ],
+      "dates": {
+        "start": null,
+        "end": null
+      }
     }
   ],
   "tracks": [
@@ -1313,6 +1417,10 @@
         "label": "Track A",
         "startsAt": "18",
         "startNote": "since LA"
+      },
+      "dates": {
+        "start": null,
+        "end": null
       }
     },
     {
@@ -1363,6 +1471,10 @@
         "label": "Track B",
         "startsAt": null,
         "startNote": "start not yet placed"
+      },
+      "dates": {
+        "start": null,
+        "end": null
       }
     }
   ],
@@ -1408,7 +1520,11 @@
         "out": []
       },
       "livingDefinition": "",
-      "openQuestions": []
+      "openQuestions": [],
+      "dates": {
+        "start": null,
+        "end": null
+      }
     },
     {
       "id": "M2",
@@ -1452,7 +1568,11 @@
         "out": []
       },
       "livingDefinition": "",
-      "openQuestions": []
+      "openQuestions": [],
+      "dates": {
+        "start": null,
+        "end": null
+      }
     },
     {
       "id": "M3",
@@ -1495,7 +1615,11 @@
         "out": []
       },
       "livingDefinition": "",
-      "openQuestions": []
+      "openQuestions": [],
+      "dates": {
+        "start": null,
+        "end": null
+      }
     }
   ],
   "shiftsNoticed": [
