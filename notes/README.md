@@ -9,7 +9,10 @@ notes/
   index.html               works index (reads works.json)
   works.json               registry: intro text + one entry per work
   notes.css                shared look for the workspace
-  timeline.js              renderer for timeline-type works
+  timeline.js              renderer for timeline-type works (Entries view)
+  chart.js                 Chart view: across the eras + dated axis
+  export.js                Markdown export, dates, gaps / interview prompts
+  INTERVIEW.md             how interviews fill a work in over time
   paradigm-timeline/
     index.html             thin shell, points timeline.js at data.json
     data.json              the work itself, the only file you edit to revise it
@@ -50,6 +53,7 @@ Edit `paradigm-timeline/data.json`, then bump `lastRevised` and set
 | `overview` | list of paragraphs, first person |
 | `relevant` | `[{ text, refs }]`; tracks also have `items` (plain list) |
 | `shifts.in` / `shifts.out` | `[{ text, refs }]` specific to this entry |
+| `dates` | `{ start, end }`, each `null` or a date point (see INTERVIEW.md): `year`/`month`/`day` or `age`/`ageTo`, plus `approx` and `text` |
 | `livingDefinition` | text that develops over time |
 | `openQuestions` | list of strings |
 | `track` (tracks only) | `{ label, startsAt: "<entry id>" \| null, startNote }` |
@@ -57,6 +61,19 @@ Edit `paradigm-timeline/data.json`, then bump `lastRevised` and set
 To add a paradigm, copy an existing one, give it a new `id` and `slug`, and
 place it in the array in chronological order. Order in the file is order on
 the page.
+
+### Work-level fields
+
+`birthYear` (lets the chart turn ages into years), `revisions[]`
+(`{ date, note }`, older revisions), `interviews[]`
+(`{ date, summary, entries }`).
+
+### Getting a work out
+
+The toolbar under each work's title can copy the whole work as Markdown,
+download it as `.md` or as its raw `data.json`, or print or save it as a PDF
+(all cards open for print). Each open card has **Copy entry** and **Copy
+interview prompt**.
 
 ### Shifts and open items
 
