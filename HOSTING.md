@@ -1,57 +1,37 @@
-# Hosting: moving from GitHub Pages to Cloudflare Pages
+# Hosting
 
-Why: the site now has private material under `/notes/`. GitHub Pages on a
-free plan needs a public repo, which would expose that material on
-github.com no matter what Cloudflare Access does on the site. Cloudflare
-Pages can build from a private repo.
+The website is a Cloudflare **Worker with static assets**, built from this
+private repo by Workers Builds (project `notebook-workspace`). The `/api/*`
+backend is a separate Worker (`worker/`, see `worker/DEPLOY.md`).
 
-Do the steps in this order. The private commit isn't pushed until step 5, so
-nothing personal is public at any point.
+| file | role |
+|---|---|
+| `wrangler.jsonc` | Worker config: serves the repo root as static files |
+| `site-worker.js` | runs before every request; redirects `*.workers.dev` and preview URLs to the Access-gated `thegardners.xyz` |
+| `.assetsignore` | keeps config, `worker/` source, and `*.md` guides from being served |
+| `_headers` | `X-Robots-Tag: noindex` and `no-cache` for `/notes/*` |
 
-## 1. Create the Pages project (repo still public, nothing private in it yet)
+## Dashboard settings (Workers & Pages → notebook-workspace → Settings → Build)
 
-Cloudflare dashboard → **Workers & Pages → Create → Pages → Connect to Git**.
+- Root directory: `/` (empty)
+- Build command: *(empty)*
+- **Deploy command: `npx wrangler deploy`**. This is what publishes `main`.
+- Non-production branch deploy command: `npx wrangler preview` (fine as is)
 
-- Repository: `tannmann101/gardners-hub`. When GitHub asks, let the
-  Cloudflare Pages app access this repo.
-- Production branch: `main`
-- Framework preset: **None**
-- Build command: *(leave empty)*
-- Build output directory: `/`
+The `name` in `wrangler.jsonc` must match the Worker's name in the dashboard.
 
-Deploy. It'll be live at `<project>.pages.dev`. Open it and check the home
-page looks right.
+## Domain
 
-## 2. Point thegardners.xyz at Pages
+Settings → Domains & Routes → Add → Custom domain → `thegardners.xyz`.
+After it's attached, check:
 
-In the Pages project → **Custom domains → Set up a custom domain** →
-`thegardners.xyz`. Cloudflare offers to replace the existing DNS record
-(currently GitHub Pages). Accept.
+- `https://thegardners.xyz` asks for the Access PIN.
+- `https://thegardners.xyz/notes/` loads behind it.
+- `https://thegardners.xyz/api/tips` still returns JSON. If it doesn't,
+  the site Worker is answering `/api/*` instead of the API Worker. Tell
+  Claude, because the fix is a small config change.
 
-Then check:
-- `https://thegardners.xyz` loads and still asks for the Access PIN.
-- `https://thegardners.xyz/api/tips` still returns JSON (the Worker route
-  for `/api/*` is unchanged and runs in front of Pages).
+## Cache-busting
 
-## 3. Lock down previews
-
-Pages project → **Settings → General → Access policy → Enable** for
-preview deployments. (The `functions/_middleware.js` in this repo also
-redirects every `*.pages.dev` address to `thegardners.xyz`, so they fall
-under the same Access login. This setting is a second layer.)
-
-## 4. Make the GitHub repo private
-
-GitHub → repo **Settings → General → Danger Zone → Change visibility →
-Private**. GitHub Pages switches off by itself on a free plan. That's fine
-now, because Cloudflare is serving the site. The Cloudflare Pages and Claude
-GitHub apps keep their access.
-
-## 5. Push the Notes Workspace
-
-Tell Claude the repo is private. Claude checks, then pushes the branch and,
-if you want, opens and merges the PR. Cloudflare Pages deploys `main`
-automatically.
-
-After the move, the `CNAME` file is unused. It's harmless, and can be
-deleted later.
+`.json` data is fetched with `no-cache`. If you change a `.css` or `.js`
+file, bump the `?v=` on its tag in the HTML.
