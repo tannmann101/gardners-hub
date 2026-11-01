@@ -252,6 +252,12 @@
     .nav-links { gap: 0; }
     .nav-links a { padding: 8px 8px; font-size: 0.82rem; }
   }
+  /* Smallest phones: four nav links need a little more room. */
+  @media (max-width: 360px) {
+    nav { padding: 0 10px; }
+    .wordmark span { display: none; }
+    .nav-links a { padding: 8px 6px; font-size: 0.8rem; }
+  }
 </style>
 </head>
 <body>
@@ -262,6 +268,7 @@
     <li><a href="#apps">Apps</a></li>
     <li><a href="#tools">Tools</a></li>
     <li><a href="#resources">Resources</a></li>
+    <li><a href="/notes/" rel="nofollow">Notes</a></li>
     <!-- Future pages go here, e.g. <li><a href="/plan/">3-Year Plan</a></li> -->
   </ul>
 </nav>

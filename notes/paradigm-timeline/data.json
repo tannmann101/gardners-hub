@@ -1,0 +1,1651 @@
+{
+  "_readme": "Data for the Working Paradigm Timeline. Edit this file to change the work; the page code never needs to change. Use null for anything not yet sorted. See notes/README.md for the field guide.",
+  "title": "Working Paradigm Timeline",
+  "subtitle": "The frameworks I reasoned from or lived under, in order, as best I can place them.",
+  "lastRevised": "2026-11-01",
+  "revisionNote": null,
+  "definition": {
+    "heading": "Working definition",
+    "paragraphs": [
+      "Paradigm comes from Greek paradeigma, \"pattern, model, example,\" from para- (beside) + deiknynai (to show). Late Latin paradigma. In English it first meant an example or pattern, especially the declension tables of grammar. In Plato it is the model a maker looks to when making something. For tracking purposes I am using the Kuhn sense (1962): the framework of shared assumptions a person or community reasons from, which determines what counts as a question, as evidence, and as an answer. It is usually held without being noticed. Working use: a paradigm in my life is a frame I reasoned from, not merely a view I held or a book I read."
+    ],
+    "note": "Etymology and Kuhn sense were supplied by Claude on request and not verified against a dictionary.",
+    "noteFlag": "supplied by Claude, unverified"
+  },
+  "tests": [
+    {
+      "key": "status",
+      "name": "Status",
+      "text": "Ended, ongoing, or ongoing but no longer held."
+    },
+    {
+      "key": "salvific",
+      "name": "Salvific or worldly",
+      "text": "Render unto Caesar what is Caesar's and to God what is God's. A worldly paradigm can bind, punish and make me deal with what I did, but it cannot absolve. A salvific one is what could. Living under a worldly paradigm is not the same as reasoning from it as ultimate."
+    },
+    {
+      "key": "reason",
+      "name": "Ratio or Logos",
+      "text": "Reason cannot be separated from absolution. Reason as ratio is reckoning and accounting, and it can tally me but not loosen me. Reason as Logos is a Person I reason in, and that is the only sense that touches absolution."
+    },
+    {
+      "key": "boundary",
+      "name": "Boundary",
+      "text": "A proper group of people has to have an element of exclusion, and I hold this as a necessary element of any grouping. Partaking of the Lord's Supper is probably the moment where that exclusion is applied most stringently."
+    }
+  ],
+  "sources": {
+    "text": "Reason from Latin ratio, \"reckoning, account, calculation,\" from reri, \"to reckon.\" Absolve from Latin absolvere, ab + solvere, \"to loosen.\" Solvere is also the root of solve and resolve, and absolve once also meant \"to resolve or explain.\" Ratio was used to translate Greek logos but lacks logos's sense of word and speech. Logos from legein, \"to gather, speak,\" and is the New Testament term for the Word, the second person of the Trinity. The link between ratio and Logos is my synthesis with Claude, not a settled claim.",
+    "flag": "requested by me, not verified beyond the dictionaries; ratio–Logos link with Claude"
+  },
+  "eras": [
+    {
+      "key": "childhood",
+      "name": "Childhood"
+    },
+    {
+      "key": "teens",
+      "name": "Teens"
+    },
+    {
+      "key": "adulthood",
+      "name": "Adulthood"
+    }
+  ],
+  "paradigms": [
+    {
+      "id": "1",
+      "log": 1,
+      "era": "childhood",
+      "slug": "family-as-my-parents-conceived-it",
+      "title": "The family as my parents conceived it",
+      "kind": "inherited",
+      "kindNote": null,
+      "period": null,
+      "placementUncertain": null,
+      "alsoIn": [
+        "adulthood"
+      ],
+      "status": {
+        "value": "ongoing",
+        "note": "as something my wife and I are actively working against."
+      },
+      "tests": {
+        "salvific": {
+          "value": null,
+          "note": null,
+          "flag": null
+        },
+        "reason": {
+          "value": null,
+          "note": null,
+          "flag": null
+        },
+        "boundary": {
+          "text": "Husband and wife, and all their kids and any of those kids' kids and so on until they're gone. Before marriage, you're downstream from whatever mother and father you trace back to.",
+          "flag": null,
+          "refs": []
+        }
+      },
+      "overview": [
+        "Something was falling apart in it from where they sat, and it ended in divorce."
+      ],
+      "relevant": [
+        {
+          "text": "The Orthodox conception of family, marriage and relationships",
+          "refs": [
+            "22",
+            "24"
+          ]
+        }
+      ],
+      "shifts": {
+        "in": [],
+        "out": [
+          {
+            "text": "Replaced by the Orthodox conception of family, marriage and relationships (see entries 22 and 24).",
+            "refs": [
+              "22",
+              "24"
+            ]
+          }
+        ]
+      },
+      "livingDefinition": "",
+      "openQuestions": [
+        "Salvific or worldly, and ratio or Logos."
+      ]
+    },
+    {
+      "id": "2",
+      "log": 2,
+      "era": "childhood",
+      "slug": "state-and-country",
+      "title": "State and country",
+      "kind": "inherited",
+      "kindNote": "by birth, as by every citizen",
+      "period": "From birth, ongoing",
+      "placementUncertain": null,
+      "alsoIn": [
+        "teens",
+        "adulthood"
+      ],
+      "status": {
+        "value": "ongoing",
+        "note": "My cars are registered to the state, and so is my identity."
+      },
+      "tests": {
+        "salvific": {
+          "value": "worldly",
+          "note": "Worldly, not salvific: it can punish me and make me deal with what I did, but it cannot absolve me. I live under it and do not reason from it as ultimate.",
+          "flag": null
+        },
+        "reason": {
+          "value": "ratio",
+          "note": null,
+          "flag": null
+        },
+        "boundary": {
+          "text": "If state means a state of affairs, the exclusion is everything outside of or irrelevant to that locale. If it means the state of Indiana, the exclusion is everyone not registered as a citizen of Indiana.",
+          "flag": null,
+          "refs": []
+        }
+      },
+      "overview": [
+        "Custody schedule, monthly payment, law-abiding citizens, a vague social contract to uphold. My dad paid on time and kept the schedule to the T. He still gives me money on birthdays and holidays, though we don't talk much."
+      ],
+      "relevant": [],
+      "shifts": {
+        "in": [],
+        "out": []
+      },
+      "livingDefinition": "",
+      "openQuestions": []
+    },
+    {
+      "id": "3",
+      "log": 3,
+      "era": "childhood",
+      "slug": "divorce-as-normal",
+      "title": "Divorce as normal",
+      "kind": "inherited",
+      "kindNote": null,
+      "period": null,
+      "placementUncertain": null,
+      "alsoIn": [
+        "adulthood"
+      ],
+      "status": {
+        "value": "ongoing",
+        "note": "as something my wife and I are actively working against."
+      },
+      "tests": {
+        "salvific": {
+          "value": null,
+          "note": null,
+          "flag": null
+        },
+        "reason": {
+          "value": null,
+          "note": null,
+          "flag": null
+        },
+        "boundary": {
+          "text": "See entry 1.",
+          "flag": null,
+          "refs": [
+            "1"
+          ]
+        }
+      },
+      "overview": [
+        "My parents divorced and my mom got custody. She arranged for my brother and I to see my dad on a schedule, and he paid a set amount per month. My mom remarried soon after to a man who had also been divorced, whose settlement gave him the family business and custody of one child while his ex received money and custody of the other. Divorce was normalized for them as well."
+      ],
+      "relevant": [
+        {
+          "text": "Boundary",
+          "refs": [
+            "1"
+          ]
+        }
+      ],
+      "shifts": {
+        "in": [],
+        "out": []
+      },
+      "livingDefinition": "",
+      "openQuestions": [
+        "Salvific or worldly, and ratio or Logos."
+      ]
+    },
+    {
+      "id": "4",
+      "log": 4,
+      "era": "childhood",
+      "slug": "mom-as-working-single-mom-then-breadwinner",
+      "title": "Mom as the working single mom, then breadwinner",
+      "kind": "inherited",
+      "kindNote": null,
+      "period": null,
+      "placementUncertain": null,
+      "alsoIn": [
+        "adulthood"
+      ],
+      "status": {
+        "value": "ongoing",
+        "note": "as something my wife and I are actively working against."
+      },
+      "tests": {
+        "salvific": {
+          "value": null,
+          "note": null,
+          "flag": null
+        },
+        "reason": {
+          "value": null,
+          "note": null,
+          "flag": null
+        },
+        "boundary": {
+          "text": "See entry 1.",
+          "flag": null,
+          "refs": [
+            "1"
+          ]
+        }
+      },
+      "overview": [
+        "My mom was Ms. suit pants in the workplace, a \"single mom.\" She met my stepdad as his bookkeeper, fell for the boss after his divorce, and moved into his home. They had their wedding by themselves in Vegas on a weekend trip and did a photo shoot at a generic wedding venue. His company went bankrupt and my mom went to work for the company's accounting firm. She became the breadwinner while he was for a time a stay at home \"dad,\" who really only fathered the one son he had custody of."
+      ],
+      "relevant": [
+        {
+          "text": "Boundary",
+          "refs": [
+            "1"
+          ]
+        }
+      ],
+      "shifts": {
+        "in": [],
+        "out": []
+      },
+      "livingDefinition": "",
+      "openQuestions": [
+        "Salvific or worldly, and ratio or Logos."
+      ]
+    },
+    {
+      "id": "5",
+      "log": 5,
+      "era": "childhood",
+      "slug": "public-school-and-sports",
+      "title": "Public school and sports",
+      "kind": "inherited",
+      "kindNote": null,
+      "period": "Elementary through high school",
+      "placementUncertain": null,
+      "alsoIn": [
+        "teens"
+      ],
+      "status": {
+        "value": "ended",
+        "note": "I can still appreciate a good game and will watch the Super Bowl and a game or two here and there, but I never attend to it deliberately."
+      },
+      "tests": {
+        "salvific": {
+          "value": "worldly",
+          "note": "The coaches never got into what a man is for, only why we were training this way and what they intended for the team.",
+          "flag": null
+        },
+        "reason": {
+          "value": "ratio",
+          "note": null,
+          "flag": null
+        },
+        "boundary": {
+          "text": "The team is everyone who shows up to the game and wears the jersey on the sidelines. The staff, the referees' staff, the audience and all the resources needed to maintain the endeavor are part of their own large network, delegated down to individual pursuits from their own perspective. The team itself is distinguished by its players and their preparation to compete with other teams toward some end, like a final champion per cycle (year or season).",
+          "flag": null,
+          "refs": []
+        }
+      },
+      "overview": [
+        "Outsourced formation. Both parents worked, so the teaching was handed to adults in a secularized, generic, reserved manner. Public school, school sports, and sometimes a YMCA league. It felt as if everyone knew parents should be teaching this at home but excused themselves as too busy getting by. My parents and stepdad never wanted to be involved.",
+        "Coaches were often parents of kids at the school, and the coaches were in better spirits than everything else. From late middle school through high school I got the impression the coaches were preparing us for adult level sports and for work out in the world, physical labor. Always working out, practicing, studying, conditioning, training, reps galore. There was an undertone of becoming an upstanding man in society, baked into the values and virtues of the team effort, that could translate into real life. Some coaches leaned into that. Most leaned into the season itself and how to train right here, right now. The big picture floated off. They reminded us throughout the season and we didn't care, we wanted to eat or rest.",
+        "Some guys idolized famous football players. I held Tom Brady in high esteem for a stint in elementary and middle school. My elementary school was the John Adams Patriots with the same uniform as the NFL team, and one year I got number 12."
+      ],
+      "relevant": [],
+      "shifts": {
+        "in": [],
+        "out": []
+      },
+      "livingDefinition": "",
+      "openQuestions": []
+    },
+    {
+      "id": "6",
+      "log": 6,
+      "era": "childhood",
+      "slug": "stepdads-standard",
+      "title": "Stepdad's standard",
+      "kind": "inherited",
+      "kindNote": null,
+      "period": "Around age 8-9 onward",
+      "placementUncertain": null,
+      "alsoIn": [],
+      "status": {
+        "value": "ended",
+        "note": "It never took hold or established itself. I stopped saying sir once I left home. Now I call him Mike and talk man to man."
+      },
+      "tests": {
+        "salvific": {
+          "value": "worldly",
+          "note": "Worldly, with no ground given beyond the command.",
+          "flag": null
+        },
+        "reason": {
+          "value": null,
+          "note": null,
+          "flag": null
+        },
+        "boundary": {
+          "text": "We were included in his household and provided for financially and practically. We had a room, a bed, clothes, toys, gear and resources, and we were fed. We were never included in his fatherhood. His sons were. My dad \"didn't get the chance\" to be our dad because our mom must have taken that from us. He wouldn't say that, but he nudged us toward that way of thinking. My mom tells us he was maniacal and unhealthy in his behavior and outlook. So we were never included in his fatherhood either. Our mom wasn't a man and wasn't our father, and whenever she tried I insisted it wasn't correct and wouldn't let that go. I may have also excluded them from having any real authority over me.",
+          "flag": null,
+          "refs": []
+        }
+      },
+      "overview": [
+        "He expected respect, discipline, good manners and a vague sense of \"good,\" \"right,\" \"a real man\" from his own son. With us stepkids he deferred to my mom, who hoped we would see him as a father figure. We were required to call him \"sir,\" a rule I didn't like at 8-9.",
+        "In my mind he was a dick, so I never attributed the authority to him."
+      ],
+      "relevant": [],
+      "shifts": {
+        "in": [],
+        "out": []
+      },
+      "livingDefinition": "",
+      "openQuestions": [
+        "Ratio or Logos."
+      ]
+    },
+    {
+      "id": "7",
+      "log": 7,
+      "era": "childhood",
+      "slug": "the-medical-system",
+      "title": "The medical system",
+      "kind": "inherited",
+      "kindNote": null,
+      "period": null,
+      "placementUncertain": null,
+      "alsoIn": [
+        "adulthood"
+      ],
+      "status": {
+        "value": "ongoing",
+        "note": "unresolved."
+      },
+      "tests": {
+        "salvific": {
+          "value": null,
+          "note": "Presented as worldly care for the most part, with a minor consideration that God might work through the worldly system to actually save you specifically, perhaps as a result of enough properly aligned prayer. Still unsure.",
+          "flag": null
+        },
+        "reason": {
+          "value": null,
+          "note": null,
+          "flag": null
+        },
+        "boundary": {
+          "text": "Sick versus healthy, trained medical staff versus those in need.",
+          "flag": null,
+          "refs": []
+        }
+      },
+      "overview": [
+        "My parents complied with all things medical and lived downstream of it, especially after my stepdad's stroke and hospitalization.",
+        "Praying for those in need is normalized in the society I'm in. Asking why and how prayer would be helpful often offends people, as though the answer were obvious. It isn't obvious to me."
+      ],
+      "relevant": [],
+      "shifts": {
+        "in": [],
+        "out": []
+      },
+      "livingDefinition": "",
+      "openQuestions": [
+        "Asking why and how prayer would be helpful often offends people, as though the answer were obvious. It isn't obvious to me. Open question.",
+        "Ratio or Logos."
+      ]
+    },
+    {
+      "id": "8",
+      "log": 8,
+      "era": "childhood",
+      "slug": "the-baptist-church",
+      "title": "The Baptist church",
+      "kind": "inherited",
+      "kindNote": null,
+      "period": "Childhood through my teens, until I didn't have to go",
+      "placementUncertain": null,
+      "alsoIn": [
+        "teens"
+      ],
+      "status": {
+        "value": "ended",
+        "note": "I went through the motions until I didn't have to go."
+      },
+      "tests": {
+        "salvific": {
+          "value": null,
+          "note": "It presented itself as salvific and I was genuinely trying to do the right thing.",
+          "flag": null
+        },
+        "reason": {
+          "value": null,
+          "note": null,
+          "flag": null
+        },
+        "boundary": {
+          "text": "Really just those who show up versus those who don't. If you show up to the physical building and do the stuff they do there, you're good to go. If you don't come to church, good luck handling Satan all alone, you fool, you should have come to church. They sit there with an attitude of \"that prodigal son will return once he gets some sense and starts coming to church,\" not explaining it, just expecting perfect attendance or something like it.",
+          "flag": null,
+          "refs": []
+        }
+      },
+      "overview": [
+        "A Baptist pastor came to the hospital to pray for my stepdad's recovery. He recovered and owed a debt of gratitude to that pastor's church. We went Sunday morning, Wednesday evening, and sometimes Sunday evening. It was not an option for my brother and me. They got us into Sunday school and signed us up for a summer church camp that my step grandma paid for. I was baptized to the church's standard (show a genuine desire, answer yes to whether I truly believed and meant it), never having to show I understood anything about it.",
+        "I caught a glimpse of Christ as almost a mere proposition and tried to make the words mean something greater \"in the name of the Trinity,\" without ever being shown the Trinitarian model or how the church comes downstream of it. I behaved in a way I knew was acceptable and avoided eye contact when asked to pray, because praying would only have been to please them. I never prayed alone in their manner because I was expected to pick it up.",
+        "I wanted to know why pray, why directly to God, why God, Jesus, Lord and Holy Spirit are said almost identically as though they were one thing. I never felt comfortable asking those questions there. I came to see them as questions you don't ask these folks, mostly from conversations with my mom and friends about why anyone should believe this. I was always asking sincerely, not to provoke. I gave up trying to understand it from them. The account was never given, so the claim stayed a proposition."
+      ],
+      "relevant": [],
+      "shifts": {
+        "in": [],
+        "out": []
+      },
+      "livingDefinition": "",
+      "openQuestions": []
+    },
+    {
+      "id": "9",
+      "log": 9,
+      "era": "childhood",
+      "slug": "my-moms-strict-household",
+      "title": "My mom's strict household",
+      "kind": "inherited",
+      "kindNote": null,
+      "period": null,
+      "placementUncertain": null,
+      "alsoIn": [],
+      "status": {
+        "value": "ended",
+        "note": null
+      },
+      "tests": {
+        "salvific": {
+          "value": "worldly",
+          "note": "Mostly it had no ground other than \"because I said so.\"",
+          "flag": null
+        },
+        "reason": {
+          "value": null,
+          "note": null,
+          "flag": null
+        },
+        "boundary": {
+          "text": "Anyone she's legally responsible for, it seems.",
+          "flag": null,
+          "refs": []
+        }
+      },
+      "overview": [
+        "Strict as if authorized by a man, though my stepdad wasn't the one orchestrating it. I questioned the authority because it wasn't proper. She clamped down: chores, groundings, once the spankings stopped working. That's why I left.",
+        "It was also as if she was being my father and expecting me to attribute that to my stepdad. Since I didn't, I attributed it to her, and she would think we must be good, and I would go back to \"yeah but you're my mom, why don't I get a real dad?\" That was never said explicitly."
+      ],
+      "relevant": [],
+      "shifts": {
+        "in": [],
+        "out": []
+      },
+      "livingDefinition": "",
+      "openQuestions": [
+        "Ratio or Logos."
+      ]
+    },
+    {
+      "id": "10",
+      "log": 10,
+      "era": "childhood",
+      "slug": "observer-who-blends",
+      "title": "Observer who blends",
+      "kind": "mine",
+      "kindNote": null,
+      "period": "Running through childhood",
+      "placementUncertain": null,
+      "alsoIn": [],
+      "status": {
+        "value": null,
+        "note": null
+      },
+      "tests": {
+        "salvific": {
+          "value": null,
+          "note": null,
+          "flag": null
+        },
+        "reason": {
+          "value": null,
+          "note": null,
+          "flag": null
+        },
+        "boundary": {
+          "text": null,
+          "flag": null,
+          "refs": []
+        }
+      },
+      "overview": [
+        "I felt something was wrong but was so ingrained in school and the teams that I never got a real grasp of it. I accepted a \"go with the flow\" attitude. I knew I didn't fit in, but nobody really did. I was just aware of it. I learned to be funny, tough (or at least seem it), cool, nice, smart. To some degree it was how to blend in, and to another degree how to fit in in an upside down situation.",
+        "Like an alien observing from the outside while being an average kid on the inside. The thing everyone seemed to fear was me, but I showed it was possible for me as this upside down thing to work or fit. It took more effort than a typical kid needed, and that I was willing to make that effort was something.",
+        "My name, Tanner Gardner, is two surnames that are both trade or working names, which is fitting. I'm left handed, which is fitting. I got a full sleeve tattoo on my left arm in my 20s, which is something."
+      ],
+      "relevant": [],
+      "shifts": {
+        "in": [],
+        "out": []
+      },
+      "livingDefinition": "",
+      "openQuestions": [
+        "Boundary test."
+      ]
+    },
+    {
+      "id": "11",
+      "log": 11,
+      "era": "teens",
+      "slug": "street-gang-adjacent-worldview",
+      "title": "Street gang adjacent worldview",
+      "kind": "mine",
+      "kindNote": null,
+      "period": "High school",
+      "placementUncertain": "Where entry 11 sits against the church years in entry 8",
+      "alsoIn": [],
+      "status": {
+        "value": null,
+        "note": null
+      },
+      "tests": {
+        "salvific": {
+          "value": null,
+          "note": null,
+          "flag": null
+        },
+        "reason": {
+          "value": null,
+          "note": null,
+          "flag": null
+        },
+        "boundary": {
+          "text": null,
+          "flag": null,
+          "refs": []
+        }
+      },
+      "overview": [
+        "I started skipping school with a guy involved in local street gang activity. I saw some of their activities and grew to understand elements of their worldview from the ground level. I worked at Jersey Mike's until moving to my dad's."
+      ],
+      "relevant": [],
+      "shifts": {
+        "in": [],
+        "out": []
+      },
+      "livingDefinition": "",
+      "openQuestions": [
+        "Placement: where entry 11 sits against the church years in entry 8.",
+        "Boundary test."
+      ]
+    },
+    {
+      "id": "12",
+      "log": 12,
+      "era": "teens",
+      "slug": "dads-house-senior-year",
+      "title": "Dad's house, senior year",
+      "kind": "mine",
+      "kindNote": null,
+      "period": null,
+      "placementUncertain": null,
+      "alsoIn": [],
+      "status": {
+        "value": null,
+        "note": null
+      },
+      "tests": {
+        "salvific": {
+          "value": null,
+          "note": null,
+          "flag": null
+        },
+        "reason": {
+          "value": null,
+          "note": null,
+          "flag": null
+        },
+        "boundary": {
+          "text": null,
+          "flag": null,
+          "refs": []
+        }
+      },
+      "overview": [
+        "I ran away from my mom and stepdad's place, stayed with a friend for a week, then moved in with my dad. He had few rules beyond cleaning up after myself and being home by a certain hour. A small Oklahoma farm town. I was a stranger there, so the parties were local kids inviting me to the bigger \"city kid\" parties out in the country. I worked at a Walgreens."
+      ],
+      "relevant": [],
+      "shifts": {
+        "in": [],
+        "out": []
+      },
+      "livingDefinition": "",
+      "openQuestions": [
+        "Boundary test."
+      ]
+    },
+    {
+      "id": "13",
+      "log": 13,
+      "era": "teens",
+      "slug": "the-pharmacist-plan",
+      "title": "The pharmacist plan",
+      "kind": "mine",
+      "kindNote": null,
+      "period": null,
+      "placementUncertain": null,
+      "alsoIn": [],
+      "status": {
+        "value": "ended",
+        "note": "Ended when I found I didn't have the money and would need a loan, and no adult in my life would cosign it."
+      },
+      "tests": {
+        "salvific": {
+          "value": null,
+          "note": null,
+          "flag": null
+        },
+        "reason": {
+          "value": null,
+          "note": null,
+          "flag": null
+        },
+        "boundary": {
+          "text": null,
+          "flag": null,
+          "refs": []
+        }
+      },
+      "overview": [
+        "I decided I would become a pharmacist. I had found myself around drugs and my family seemed to believe in the medical system, so I wanted to bridge those worlds in that trade."
+      ],
+      "relevant": [],
+      "shifts": {
+        "in": [],
+        "out": []
+      },
+      "livingDefinition": "",
+      "openQuestions": [
+        "Boundary test."
+      ]
+    },
+    {
+      "id": "14",
+      "log": 14,
+      "era": "teens",
+      "slug": "hometown-years",
+      "title": "Hometown years",
+      "kind": "mine",
+      "kindNote": null,
+      "period": null,
+      "placementUncertain": null,
+      "alsoIn": [],
+      "status": {
+        "value": null,
+        "note": null
+      },
+      "tests": {
+        "salvific": {
+          "value": null,
+          "note": null,
+          "flag": null
+        },
+        "reason": {
+          "value": null,
+          "note": null,
+          "flag": null
+        },
+        "boundary": {
+          "text": null,
+          "flag": null,
+          "refs": []
+        }
+      },
+      "overview": [
+        "I moved back to my hometown alone and stayed with the gang-adjacent friend. I worked at Jersey Mike's again and went to parties and hung out with women I was into and who were perhaps into me.",
+        "I discovered psychedelics and an artistic side I had suppressed. My mom's household had made me hide my creative, meaningful, expressive side, and I think this is what mostly motivated the tattoos, which came over a few years and built into the full sleeve.",
+        "I got into making music: bought recording equipment and learned to use YouTube beats as palettes for rap. I wrote a rap, recorded it to the beat, mixed it, and mastered it, all from a mangled little shared apartment. I made a mixtape with a childhood friend."
+      ],
+      "relevant": [],
+      "shifts": {
+        "in": [],
+        "out": []
+      },
+      "livingDefinition": "",
+      "openQuestions": [
+        "Boundary test."
+      ]
+    },
+    {
+      "id": "15",
+      "log": 15,
+      "era": "teens",
+      "slug": "college-campus-life",
+      "title": "College campus life",
+      "kind": "mine",
+      "kindNote": null,
+      "period": "Placement relative to entry 14 is uncertain",
+      "placementUncertain": "Where entry 15 falls relative to entry 14",
+      "alsoIn": [],
+      "status": {
+        "value": null,
+        "note": null
+      },
+      "tests": {
+        "salvific": {
+          "value": null,
+          "note": null,
+          "flag": null
+        },
+        "reason": {
+          "value": null,
+          "note": null,
+          "flag": null
+        },
+        "boundary": {
+          "text": null,
+          "flag": null,
+          "refs": []
+        }
+      },
+      "overview": [
+        "I stayed in a dorm at SWOSU for a while: enrolled, moved in, then decided to leave."
+      ],
+      "relevant": [],
+      "shifts": {
+        "in": [],
+        "out": []
+      },
+      "livingDefinition": "",
+      "openQuestions": [
+        "Placement: where entry 15 falls relative to entry 14.",
+        "Boundary test."
+      ]
+    },
+    {
+      "id": "16",
+      "log": 16,
+      "era": "adulthood",
+      "slug": "the-navy",
+      "title": "The Navy",
+      "kind": "mine",
+      "kindNote": null,
+      "period": null,
+      "placementUncertain": null,
+      "alsoIn": [],
+      "status": {
+        "value": null,
+        "note": null
+      },
+      "tests": {
+        "salvific": {
+          "value": null,
+          "note": null,
+          "flag": null
+        },
+        "reason": {
+          "value": null,
+          "note": null,
+          "flag": null
+        },
+        "boundary": {
+          "text": null,
+          "flag": null,
+          "refs": []
+        }
+      },
+      "overview": [
+        "I decided I needed to go get a \"big boy job\" already, and joined the Navy. Bootcamp, then JCAC in Pensacola, Florida (cryptology, cybersecurity, information warfare). I graduated and got orders to San Antonio, where I worked in a SCIF with the intel community. I reached E-5 by meritorious advancement within 4 years and earned my IW pin. I began my cybersecurity degree with UMGC."
+      ],
+      "relevant": [],
+      "shifts": {
+        "in": [],
+        "out": []
+      },
+      "livingDefinition": "",
+      "openQuestions": [
+        "Boundary test."
+      ]
+    },
+    {
+      "id": "17",
+      "log": 17,
+      "era": "adulthood",
+      "slug": "covid-at-home",
+      "title": "Covid at home",
+      "kind": "mine",
+      "kindNote": null,
+      "period": null,
+      "placementUncertain": null,
+      "alsoIn": [],
+      "status": {
+        "value": null,
+        "note": null
+      },
+      "tests": {
+        "salvific": {
+          "value": null,
+          "note": null,
+          "flag": null
+        },
+        "reason": {
+          "value": null,
+          "note": null,
+          "flag": null
+        },
+        "boundary": {
+          "text": null,
+          "flag": null,
+          "refs": []
+        }
+      },
+      "overview": [
+        "Covid happened and the SCIF shut down. I stayed home and was paid for close to a full year. I got back into music with better equipment and plenty of time to write and create. I made a few more projects and helped other artists make projects and make things look good."
+      ],
+      "relevant": [],
+      "shifts": {
+        "in": [],
+        "out": []
+      },
+      "livingDefinition": "",
+      "openQuestions": [
+        "Boundary test."
+      ]
+    },
+    {
+      "id": "18",
+      "log": 18,
+      "era": "adulthood",
+      "slug": "la-and-the-music-venture",
+      "title": "LA and the music venture",
+      "kind": "mine",
+      "kindNote": null,
+      "period": null,
+      "placementUncertain": null,
+      "alsoIn": [],
+      "status": {
+        "value": null,
+        "note": null
+      },
+      "tests": {
+        "salvific": {
+          "value": null,
+          "note": null,
+          "flag": null
+        },
+        "reason": {
+          "value": null,
+          "note": null,
+          "flag": null
+        },
+        "boundary": {
+          "text": null,
+          "flag": null,
+          "refs": []
+        }
+      },
+      "overview": [
+        "We got out of the military once the lockdowns were lifting and moved to LA for the music venture. It failed immediately because of the untenable living situation."
+      ],
+      "relevant": [
+        {
+          "text": "Reading and study runs in the background from here",
+          "refs": [
+            "A"
+          ]
+        }
+      ],
+      "shifts": {
+        "in": [],
+        "out": []
+      },
+      "livingDefinition": "",
+      "openQuestions": [
+        "Boundary test."
+      ]
+    },
+    {
+      "id": "19",
+      "log": 19,
+      "era": "adulthood",
+      "slug": "back-in-oklahoma-olive-garden-and-wgu",
+      "title": "Back in Oklahoma: Olive Garden and WGU",
+      "kind": "mine",
+      "kindNote": null,
+      "period": null,
+      "placementUncertain": null,
+      "alsoIn": [],
+      "status": {
+        "value": null,
+        "note": null
+      },
+      "tests": {
+        "salvific": {
+          "value": null,
+          "note": null,
+          "flag": null
+        },
+        "reason": {
+          "value": null,
+          "note": null,
+          "flag": null
+        },
+        "boundary": {
+          "text": null,
+          "flag": null,
+          "refs": []
+        }
+      },
+      "overview": [
+        "We moved back to Oklahoma and I worked as a bartender at an Olive Garden. I picked my degree back up, now with WGU, a fully online university. My wife worked at the Olive Garden too and we were just getting by until I could finish the degree."
+      ],
+      "relevant": [],
+      "shifts": {
+        "in": [],
+        "out": []
+      },
+      "livingDefinition": "",
+      "openQuestions": [
+        "Boundary test."
+      ]
+    },
+    {
+      "id": "20",
+      "log": 22,
+      "era": "adulthood",
+      "slug": "marriage-newborn-and-living-in-kansas",
+      "title": "Marriage, newborn, and living in Kansas",
+      "kind": "mine",
+      "kindNote": null,
+      "period": "Marriage began around the Olive Garden years (placement uncertain)",
+      "placementUncertain": "When my marriage began relative to entry 19",
+      "alsoIn": [],
+      "status": {
+        "value": null,
+        "note": null
+      },
+      "tests": {
+        "salvific": {
+          "value": null,
+          "note": null,
+          "flag": null
+        },
+        "reason": {
+          "value": null,
+          "note": null,
+          "flag": null
+        },
+        "boundary": {
+          "text": null,
+          "flag": null,
+          "refs": []
+        }
+      },
+      "overview": [
+        "My wife got pregnant, then stopped working, then we needed financial assistance. Her dad and grandma invited us to live with them. We accepted and took our newborn out to Kansas. My plans hadn't changed: finish the degree, work at the Olive Garden, get a job in IT. In Kansas I kept going with my degree."
+      ],
+      "relevant": [],
+      "shifts": {
+        "in": [],
+        "out": []
+      },
+      "livingDefinition": "",
+      "openQuestions": [
+        "Placement: when my marriage began relative to entry 19.",
+        "Boundary test."
+      ]
+    },
+    {
+      "id": "21",
+      "log": 23,
+      "era": "adulthood",
+      "slug": "it-as-the-career-and-the-msp-move-to-indiana",
+      "title": "IT as the career, and the MSP move to Indiana",
+      "kind": "mine",
+      "kindNote": null,
+      "period": null,
+      "placementUncertain": null,
+      "alsoIn": [],
+      "status": {
+        "value": null,
+        "note": null
+      },
+      "tests": {
+        "salvific": {
+          "value": null,
+          "note": null,
+          "flag": null
+        },
+        "reason": {
+          "value": null,
+          "note": null,
+          "flag": null
+        },
+        "boundary": {
+          "text": null,
+          "flag": null,
+          "refs": []
+        }
+      },
+      "overview": [
+        "I found a remote IT job out of Kansas that paid much better than the Olive Garden and had good benefits. The company, an MSP, offered to move us to Indiana and we accepted. Staying in Kansas helped financially because we paid no bills, but after her grandma passed, and her dad handled that poorly, we left sooner than we would have liked. Now I work out of the office in Indiana."
+      ],
+      "relevant": [],
+      "shifts": {
+        "in": [],
+        "out": []
+      },
+      "livingDefinition": "",
+      "openQuestions": [
+        "Boundary test."
+      ]
+    },
+    {
+      "id": "22",
+      "log": 26,
+      "era": "adulthood",
+      "slug": "orthodox-christianity",
+      "title": "Orthodox Christianity",
+      "kind": "mine",
+      "kindNote": null,
+      "period": "A slow build over roughly the last 3-4 years, hitting hardest when I was first invited to Indiana",
+      "placementUncertain": null,
+      "alsoIn": [],
+      "status": {
+        "value": "ongoing",
+        "note": null
+      },
+      "tests": {
+        "salvific": {
+          "value": "salvific",
+          "note": "Christ is truly there.",
+          "flag": null
+        },
+        "reason": {
+          "value": "logos",
+          "note": null,
+          "flag": "proposed with Claude, not yet confirmed by me"
+        },
+        "boundary": {
+          "text": null,
+          "flag": null,
+          "refs": []
+        }
+      },
+      "overview": [
+        "It built over the last 3-4 years of reading (see the Reading and study track) but really hit me on the 9 hour drive to Indiana. A coworker, now a friend, turned out to be the first Orthodox Christian I remember meeting. He invited me to a liturgy at a parish in Kentucky, right across the river from Louisville. It was the most beautiful building I'd ever been in, and the sounds, smells and feeling of the place were uplifting, personal and communal all at once.",
+        "The parish has closed communion, so I couldn't partake of the Eucharist. It was a pivotal moment, because I saw this as the fullness of the faith of Christianity in its true, upright form. Not being able to partake shaped that seeing: a proper group of people has to have an element of exclusion, and the Lord's Supper is probably where that exclusion is applied most stringently. I hold this as necessary for any grouping (see the Boundary test)."
+      ],
+      "relevant": [
+        {
+          "text": "Reading and study track",
+          "refs": [
+            "A"
+          ]
+        }
+      ],
+      "shifts": {
+        "in": [],
+        "out": []
+      },
+      "livingDefinition": "",
+      "openQuestions": [
+        "Confirm Logos.",
+        "Boundary test."
+      ]
+    },
+    {
+      "id": "23",
+      "log": 24,
+      "era": "adulthood",
+      "slug": "ai-and-vibe-coding",
+      "title": "AI and vibe coding",
+      "kind": "mine",
+      "kindNote": null,
+      "period": null,
+      "placementUncertain": null,
+      "alsoIn": [],
+      "status": {
+        "value": null,
+        "note": null
+      },
+      "tests": {
+        "salvific": {
+          "value": null,
+          "note": null,
+          "flag": null
+        },
+        "reason": {
+          "value": null,
+          "note": null,
+          "flag": null
+        },
+        "boundary": {
+          "text": null,
+          "flag": null,
+          "refs": []
+        }
+      },
+      "overview": [
+        "I have been getting into AI more lately and have learned to thoroughly vibe code, to the point where I'm learning how to code by proper prompting. It is more a game of prompting than of engineering now."
+      ],
+      "relevant": [],
+      "shifts": {
+        "in": [],
+        "out": []
+      },
+      "livingDefinition": "",
+      "openQuestions": [
+        "Boundary test."
+      ]
+    },
+    {
+      "id": "24",
+      "log": 25,
+      "era": "adulthood",
+      "slug": "now-indiana-and-the-orthodox-conception-of-family",
+      "title": "Now: Indiana, and the Orthodox conception of family",
+      "kind": "mine",
+      "kindNote": null,
+      "period": null,
+      "placementUncertain": null,
+      "alsoIn": [],
+      "status": {
+        "value": "ongoing",
+        "note": null
+      },
+      "tests": {
+        "salvific": {
+          "value": "salvific",
+          "note": "That is, to me, more a salvific means than a worldly one if participated in properly.",
+          "flag": null
+        },
+        "reason": {
+          "value": null,
+          "note": null,
+          "flag": null
+        },
+        "boundary": {
+          "text": null,
+          "flag": null,
+          "refs": []
+        }
+      },
+      "overview": [
+        "I work out of the office in Indiana, my wife is a stay at home mom, and we have our daughter. My wife and I are leaning into the Orthodox conception of family, marriage and relationships, in place of the frame in entries 1, 3 and 4, which we are actively working against.",
+        "I am bound to my wife and she is bound to me. Our children are bound to us until either the inheritance is passed on to the son or the daughter marries a man."
+      ],
+      "relevant": [
+        {
+          "text": "The frame we are actively working against",
+          "refs": [
+            "1",
+            "3",
+            "4"
+          ]
+        }
+      ],
+      "shifts": {
+        "in": [
+          {
+            "text": "In place of the frame in entries 1, 3 and 4, which we are actively working against.",
+            "refs": [
+              "1",
+              "3",
+              "4"
+            ]
+          }
+        ],
+        "out": []
+      },
+      "livingDefinition": "",
+      "openQuestions": [
+        "What \"proper\" participation looks like, and where my parents' family fell short of it (answer pending).",
+        "Boundary test."
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "id": "A",
+      "log": 21,
+      "era": "adulthood",
+      "slug": "track-reading-and-study",
+      "title": "Reading and study",
+      "kind": "mine",
+      "kindNote": null,
+      "period": "In the background since LA, ongoing",
+      "placementUncertain": null,
+      "alsoIn": [],
+      "status": {
+        "value": null,
+        "note": null
+      },
+      "tests": {
+        "salvific": {
+          "value": null,
+          "note": null,
+          "flag": null
+        },
+        "reason": {
+          "value": null,
+          "note": null,
+          "flag": null
+        },
+        "boundary": {
+          "text": null,
+          "flag": null,
+          "refs": []
+        }
+      },
+      "overview": [
+        "Also studying topics, concepts, themes, progressions, developments, arcs, paradigm shifts, psychotechnologies, technological advancement, philosophy, science, politics, ideologies, frameworks of understanding, worldviews. Leaning into Christianity in this period."
+      ],
+      "relevant": [
+        {
+          "text": "Orthodox Christianity built over these years of reading",
+          "refs": [
+            "22"
+          ]
+        }
+      ],
+      "shifts": {
+        "in": [],
+        "out": []
+      },
+      "livingDefinition": "",
+      "openQuestions": [
+        "Boundary test."
+      ],
+      "items": [
+        "The Stranger",
+        "Crime and Punishment",
+        "The Brothers Karamazov",
+        "Thus Spoke Zarathustra",
+        "Crisis of the Modern World",
+        "The Life of Moses",
+        "The Master and His Emissary",
+        "Matthieu Pageau's Language of Creation",
+        "Peterson's We Who Wrestle With God",
+        "the Narnia novels",
+        "Screwtape Letters",
+        "Mere Christianity",
+        "Miracles",
+        "Jung's Dream Symbols",
+        "Communist Manifesto",
+        "most of the Old Testament",
+        "some New Testament",
+        "Kant",
+        "Plato",
+        "Descartes",
+        "Mircea Eliade",
+        "48 Laws of Power",
+        "Vervaeke's Awakening from the Meaning Crisis",
+        "Jonathan Pageau's Symbolic World",
+        "Jordan Hall's Game B",
+        "Jay Dyer's debates and apologetics",
+        "Orthodox theologians, clergy and lay people"
+      ],
+      "track": {
+        "label": "Track A",
+        "startsAt": "18",
+        "startNote": "since LA"
+      }
+    },
+    {
+      "id": "B",
+      "log": 20,
+      "era": "adulthood",
+      "slug": "track-tech-stack",
+      "title": "Tech stack",
+      "kind": "mine",
+      "kindNote": null,
+      "period": null,
+      "placementUncertain": null,
+      "alsoIn": [],
+      "status": {
+        "value": null,
+        "note": null
+      },
+      "tests": {
+        "salvific": {
+          "value": null,
+          "note": null,
+          "flag": null
+        },
+        "reason": {
+          "value": null,
+          "note": null,
+          "flag": null
+        },
+        "boundary": {
+          "text": null,
+          "flag": null,
+          "refs": []
+        }
+      },
+      "overview": [
+        "Apple phone and Apple computer, usually a TV with basic streaming platforms. I adopted mainly using YouTube for video content. Over time I adopted Microsoft products and AI, namely Claude for personal use and ChatGPT for work."
+      ],
+      "relevant": [],
+      "shifts": {
+        "in": [],
+        "out": []
+      },
+      "livingDefinition": "",
+      "openQuestions": [
+        "Boundary test."
+      ],
+      "track": {
+        "label": "Track B",
+        "startsAt": null,
+        "startNote": "start not yet placed"
+      }
+    }
+  ],
+  "met": [
+    {
+      "id": "M1",
+      "log": null,
+      "era": "met",
+      "slug": "met-her-grandma",
+      "title": "Her grandma",
+      "kind": "met",
+      "kindNote": null,
+      "period": null,
+      "placementUncertain": null,
+      "alsoIn": [],
+      "status": {
+        "value": null,
+        "note": null
+      },
+      "tests": {
+        "salvific": {
+          "value": null,
+          "note": null,
+          "flag": null
+        },
+        "reason": {
+          "value": null,
+          "note": null,
+          "flag": null
+        },
+        "boundary": {
+          "text": null,
+          "flag": null,
+          "refs": []
+        }
+      },
+      "overview": [
+        "Distrust of doctors, not because she thought medicine useless but because she didn't think the people knew what they were doing, and she believed she knew better even without having studied it as they had. It went poorly. She was Lutheran and was cremated; the funeral was tense, but it went well."
+      ],
+      "relevant": [],
+      "shifts": {
+        "in": [],
+        "out": []
+      },
+      "livingDefinition": "",
+      "openQuestions": []
+    },
+    {
+      "id": "M2",
+      "log": null,
+      "era": "met",
+      "slug": "met-her-dad",
+      "title": "Her dad",
+      "kind": "met",
+      "kindNote": null,
+      "period": null,
+      "placementUncertain": null,
+      "alsoIn": [],
+      "status": {
+        "value": null,
+        "note": null
+      },
+      "tests": {
+        "salvific": {
+          "value": null,
+          "note": null,
+          "flag": null
+        },
+        "reason": {
+          "value": null,
+          "note": null,
+          "flag": null
+        },
+        "boundary": {
+          "text": null,
+          "flag": null,
+          "refs": []
+        }
+      },
+      "overview": [
+        "My wife's parents divorced, her mom left entirely, and she was raised by her single dad. He got involved with a pagan Norse Asatru type group of syncretists, which fell apart. He honors his Norse heritage in the genealogical sense, as a bloodline, not the mythological sense. Anti-Christian: Christianity as a sweet story for weaklings who need a sweet story to sleep at night.",
+        "He thought the funeral was unnecessary. He threw out or sold his mom's things. We lived 9 more months in that house with him in a state of unresolved grief. He honors intellect over faith and reason over feeling, as divisive dichotomies instead of relational ones. He read my tattoo and my developed character as showing I was fundamentally corrupted like him."
+      ],
+      "relevant": [],
+      "shifts": {
+        "in": [],
+        "out": []
+      },
+      "livingDefinition": "",
+      "openQuestions": []
+    },
+    {
+      "id": "M3",
+      "log": null,
+      "era": "met",
+      "slug": "met-the-msp",
+      "title": "The MSP",
+      "kind": "met",
+      "kindNote": null,
+      "period": null,
+      "placementUncertain": null,
+      "alsoIn": [],
+      "status": {
+        "value": null,
+        "note": null
+      },
+      "tests": {
+        "salvific": {
+          "value": null,
+          "note": null,
+          "flag": null
+        },
+        "reason": {
+          "value": null,
+          "note": null,
+          "flag": null
+        },
+        "boundary": {
+          "text": null,
+          "flag": null,
+          "refs": []
+        }
+      },
+      "overview": [
+        "Stated goal: \"demystifying the black box of IT and offering a simple experience for our clients that simply works.\" Under 50 people. The company is called Infinite Solutions and seeks to be a business partner and IT strategist for clients. The founder looks Baptist or some other Protestant. It hires mostly out of Pensacola Christian College. Its main client application is PointClickCare, known as PCC, the same letters as the college."
+      ],
+      "relevant": [],
+      "shifts": {
+        "in": [],
+        "out": []
+      },
+      "livingDefinition": "",
+      "openQuestions": []
+    }
+  ],
+  "shiftsNoticed": [
+    {
+      "text": "Inherited authority I questioned (sir, strictness, church by obligation) became something I left, then something I read my way back toward by choice.",
+      "refs": []
+    },
+    {
+      "text": "Outsourced formation (school, sports, church) gave way to self-directed formation (music, study).",
+      "refs": []
+    },
+    {
+      "text": "The medical system showed up three ways: complied with (family), rejected (her grandma), and a trade I wanted to bridge into (pharmacist).",
+      "refs": []
+    },
+    {
+      "text": "Pensacola shows up twice (JCAC, then the MSP hiring from the college).",
+      "refs": []
+    },
+    {
+      "text": "The state is the one inherited paradigm that never ended. It is worldly and I live under it.",
+      "refs": []
+    },
+    {
+      "text": "At church the real questions went unasked and I behaved acceptably instead (the observer in entry 10). I asked them with my mom and friends. The reading may be where they finally got an account.",
+      "refs": [
+        "10"
+      ]
+    },
+    {
+      "text": "Recurring pattern: a practice is normalized without an account, and asking for the account (why and how prayer helps, why the Trinity is said as one) reads as an offense or goes unasked. Seen at church (entry 8) and in society (entry 7).",
+      "refs": [
+        "8",
+        "7"
+      ]
+    },
+    {
+      "text": "Formation by repetition (entry 5) and formation by obligation (entry 8) both gave the form without the account.",
+      "refs": [
+        "5",
+        "8"
+      ]
+    },
+    {
+      "text": "Authority at home (entries 6 and 9) had the same shape: command with no ground beyond \"because I said so.\" The question under it was where a real father was, asked inwardly and never said out loud.",
+      "refs": [
+        "6",
+        "9"
+      ]
+    },
+    {
+      "text": "The family frame I came from (entries 1, 3, 4) is not just left behind. It is actively worked against, and the Orthodox conception of family is what my wife and I are building in its place.",
+      "refs": [
+        "1",
+        "3",
+        "4"
+      ],
+      "from": [
+        "1",
+        "3",
+        "4"
+      ],
+      "to": [
+        "24"
+      ]
+    },
+    {
+      "text": "The shift from entry 8 to entry 22 is the biggest so far: a slow build of reading, then a drive, a friend, and a liturgy. At the parish I saw a fullness I had not been shown at the Baptist church.",
+      "refs": [
+        "8",
+        "22"
+      ],
+      "from": [
+        "8"
+      ],
+      "to": [
+        "22"
+      ]
+    },
+    {
+      "text": "Confirmed general pattern: entry at the Baptist church took a sincere yes and no understanding, and the only boundary was showing up. At the parish I was kept from the Eucharist, and that exclusion is what showed me the claim had weight.",
+      "refs": []
+    },
+    {
+      "text": "With Claude: at the Baptist church the boundary was a behavior (showing up), not understanding, which fits the form given without the account. At the parish the boundary came with the account.",
+      "refs": [],
+      "flag": "with Claude"
+    },
+    {
+      "text": "The boundary in entry 6 ran both ways. We were kept out of his fatherhood, and out of my dad's too. I also drew a boundary of my own and refused my stepdad's and my mom's authority over me.",
+      "refs": [
+        "6"
+      ]
+    },
+    {
+      "text": "The boundary in entry 9 rests on legal responsibility, which is the state (entry 2) underneath the household. (Proposed with Claude, not yet confirmed.)",
+      "refs": [
+        "9",
+        "2"
+      ],
+      "flag": "proposed with Claude, not yet confirmed"
+    },
+    {
+      "text": "My wife's family has a parallel: a divorce, a single dad, and a pagan group that fell apart. Another frame that ended without holding.",
+      "refs": []
+    }
+  ],
+  "openItems": [
+    {
+      "text": "Salvific or worldly, and ratio or Logos, on entries 1, 3 and 4.",
+      "refs": [
+        "1",
+        "3",
+        "4"
+      ]
+    },
+    {
+      "text": "Ratio or Logos on entries 6, 7 and 9.",
+      "refs": [
+        "6",
+        "7",
+        "9"
+      ]
+    },
+    {
+      "text": "Confirm Logos on entry 22.",
+      "refs": [
+        "22"
+      ]
+    },
+    {
+      "text": "Boundary test on entries 10 through 24 and on both tracks.",
+      "refs": []
+    },
+    {
+      "text": "Placement uncertain: where entry 15 falls relative to entry 14; when my marriage began relative to entry 19; where entry 11 sits against the church years in entry 8.",
+      "refs": [
+        "15",
+        "14",
+        "20",
+        "19",
+        "11",
+        "8"
+      ]
+    },
+    {
+      "text": "What proper participation in family looks like (entry 24).",
+      "refs": [
+        "24"
+      ]
+    }
+  ]
+}

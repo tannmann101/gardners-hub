@@ -1,0 +1,16 @@
+{
+  "_readme": "Registry of works shown on the Notes Workspace index. To add a work: make a folder under /notes/ with an index.html and a data.json, then add one entry here. Title, subtitle, last revised and revision note are read from the work's own data.json, so they live in one place.",
+  "title": "Notes Workspace",
+  "intro": [
+    "Notes Workspace is where ideas get fleshed out in ways that are creative, unorthodox, mysterious and evocative, and, when needed, analytical, scientific and rigorous. All in due time, and always with due respect for the material.",
+    "It is a gallery of finished works, each a still image of my current understanding."
+  ],
+  "works": [
+    {
+      "slug": "paradigm-timeline",
+      "href": "/notes/paradigm-timeline/",
+      "data": "/notes/paradigm-timeline/data.json",
+      "form": "Timeline"
+    }
+  ]
+}
