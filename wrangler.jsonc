@@ -1,0 +1,19 @@
+// Cloudflare Workers config for the website itself (static files + a tiny
+// script). The /api/* backend is a separate Worker configured in worker/.
+//
+// "name" must match the Worker project in the Cloudflare dashboard.
+{
+  "name": "notebook-workspace",
+  "main": "site-worker.js",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    // Serve the repo root; .assetsignore keeps config, the API worker
+    // source, and the README guides from being uploaded.
+    "directory": ".",
+    "binding": "ASSETS",
+    // Run site-worker.js before every asset so the host check always applies.
+    "run_worker_first": true
+  },
+  // Required by `wrangler preview` (branch preview builds). Can stay empty.
+  "previews": {}
+}

@@ -1,4 +1,4 @@
-# Cloudflare Pages response headers (ignored by GitHub Pages).
+# Response headers for the static site (Cloudflare Workers static assets).
 # Real HTTP noindex for the private Notes Workspace, on top of the
 # <meta name="robots"> tags in each page, so it also covers the JSON data.
 /notes/*
